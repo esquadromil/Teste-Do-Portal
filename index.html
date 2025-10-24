@@ -84,10 +84,14 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
   transition:0.2s; box-shadow:0 0 8px var(--branco);
 }
 .voltar-btn:hover { background: rgba(255,255,255,0.2); }
-#mensagem,#mensagemGuarita {
+#mensagem,#mensagemGuarita,#msgLogin {
   margin-top:20px; font-weight:bold; transition:opacity 1s ease; color:#00ff88;
 }
 .hidden { display:none; }
+
+/* LOGIN */
+#login { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; }
+#login input { margin:8px 0; }
 </style>
 </head>
 <body>
@@ -100,7 +104,16 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
   <img src="logocolorida.png" alt="Logo Esquadromil">
 </header>
 
-<div id="menu">
+<!-- LOGIN -->
+<div id="login">
+  <h1>Login Portal</h1>
+  <input type="email" id="email" placeholder="Email"/>
+  <input type="password" id="senha" placeholder="Senha"/>
+  <button id="btnLogin">Entrar</button>
+  <div id="msgLogin"></div>
+</div>
+
+<div id="menu" style="display:none;">
   <h1>Portal Esquadromil</h1>
   <p class="slogan">Sistema de suporte e comunicação — tecnologia que conecta</p>
   <button class="menu-btn" id="btnChamado">💻 Chamado TI</button>
@@ -172,9 +185,35 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
   <button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 <script>
+const SUPABASE_URL = 'https://erqkfifyrchqhevyfavl.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVycWtmaWZ5cmNocWhldnlmYXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMjIzNjQsImV4cCI6MjA3Njg5ODM2NH0.4pGclAk_p4KhcsU4rtTW-gOqUxupBKrA-S_CWmLEiSk';
+const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// === LOGIN ===
+const loginDiv = document.getElementById('login');
+const menu = document.getElementById('menu');
+const msgLogin = document.getElementById('msgLogin');
+
+document.getElementById('btnLogin').addEventListener('click', async ()=>{
+  const email = document.getElementById('email').value;
+  const senha = document.getElementById('senha').value;
+
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
+
+  if(error){
+    msgLogin.textContent = "❌ Erro no login";
+    msgLogin.style.color = "red";
+  } else {
+    msgLogin.textContent = "✅ Login bem-sucedido!";
+    msgLogin.style.color = "green";
+    loginDiv.style.display = 'none';
+    menu.style.display = 'flex';
+  }
+});
+
 // === CONTROLE DE TELAS ===
-const menu=document.getElementById('menu');
 const formChamado=document.getElementById('formChamado');
 const formGuarita=document.getElementById('formGuarita');
 document.getElementById('btnChamado').addEventListener('click', ()=>{menu.style.display='none'; formChamado.style.display='block';});
@@ -254,5 +293,3 @@ formG.addEventListener('submit',e=>{
 </script>
 </body>
 </html>
-
-
