@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portal Esquadromil</title>
+<style>
+:root {
+  --azul: #1B2F91;
+  --vermelho: #FF2B2B;
+  --branco: #FFFFFF;
+  --glow-azul: rgba(27, 47, 145, 0.6);
+  --glow-vermelho: rgba(255, 43, 43, 0.6);
+  --transition: all 0.25s ease;
+}
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+  font-family:"Segoe UI", Arial, sans-serif;
+  background: linear-gradient(135deg, var(--azul), #122069);
+  color: var(--branco);
+  overflow-x:hidden;
+}
+#intro {
+  position: fixed; top:0; left:0; width:100%; height:100vh;
+  background: radial-gradient(circle, var(--azul), #0b165a);
+  display:flex; justify-content:center; align-items:center; flex-direction:column;
+  z-index:10; animation: fadeOutIntro 1s ease 3.5s forwards;
+}
+#intro img { width:200px; animation: logoGrow 3s ease forwards; }
+@keyframes logoGrow {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(0.8); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes fadeOutIntro { to { opacity:0; visibility:hidden; } }
+header {
+  position: fixed; top:0; width:100%; padding:12px 0;
+  text-align:center; background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px); z-index:5;
+}
+header img { height:60px; transition: transform 0.3s; }
+header img:hover { transform: scale(1.05); }
+#menu {
+  height:100vh; display:flex; flex-direction:column;
+  justify-content:center; align-items:center; gap:30px;
+  position: relative;
+  background: url('esquadromilll.png') no-repeat center center;
+  background-size: cover;
+}
+#menu::before {
+  content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
+  background: rgba(27, 47, 145, 0.5); z-index:0;
+}
+#menu > * { position: relative; z-index:1; }
+h1 { font-size:2.5em; text-shadow:0 0 15px rgba(0,0,0,0.4);}
+p.slogan { font-size:1.2em; color:rgba(255,255,255,0.8); margin-bottom:40px; }
+.menu-btn {
+  background: var(--branco); color: var(--azul); font-weight:bold; padding:18px 50px;
+  border-radius:16px; border:none; font-size:20px; cursor:pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4); transition: var(--transition);
+}
+.menu-btn:hover { transform: translateY(-3px) scale(1.05); background: var(--vermelho); color: var(--branco); }
+.form-container { display:none; padding:90px 20px 40px; animation: showForm 0.6s ease forwards; }
+@keyframes showForm { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+form {
+  background: rgba(255,255,255,0.08); padding:30px; border-radius:16px;
+  max-width:500px; margin:0 auto; box-shadow:0 0 25px rgba(0,0,0,0.5);
+  text-align:center;
+}
+form label { display:block; margin-top:15px; font-weight:bold; text-align:left; }
+input, select, textarea {
+  width:100%; padding:10px; border:none; border-radius:8px; margin-top:5px;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+}
+button {
+  margin-top:20px; background-color:var(--vermelho); color:var(--branco);
+  font-weight:bold; border:none; padding:12px 25px; border-radius:10px;
+  cursor:pointer; font-size:16px; transition:0.2s; box-shadow:0 0 10px var(--glow-vermelho);
+}
+button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho);}
+.voltar-btn {
+  background:none; border:2px solid var(--branco); color:var(--branco);
+  padding:10px 25px; border-radius:8px; cursor:pointer; margin-top:20px;
+  transition:0.2s; box-shadow:0 0 8px var(--branco);
+}
+.voltar-btn:hover { background: rgba(255,255,255,0.2); }
+#mensagem,#mensagemGuarita {
+  margin-top:20px; font-weight:bold; transition:opacity 1s ease; color:#00ff88;
+}
+.hidden { display:none; }
+</style>
+</head>
+<body>
+
+<div id="intro">
+  <img src="logobranca.png" alt="Logo Esquadromil">
+</div>
+
+<header>
+  <img src="logocolorida.png" alt="Logo Esquadromil">
+</header>
+
+<div id="menu">
+  <h1>Portal Esquadromil</h1>
+  <p class="slogan">Sistema de suporte e comunicação — tecnologia que conecta</p>
+  <button class="menu-btn" id="btnChamado">💻 Chamado TI</button>
+  <button class="menu-btn" id="btnGuarita">🛡️ Agendamento Guarita</button>
+</div>
+
+<!-- FORM CHAMADO TI -->
+<div id="formChamado" class="form-container">
+  <form id="form">
+    <h1>TI - Abertura de Chamados</h1>
+    <label for="nome">Nome:</label><input type="text" name="nome" id="nome" required/>
+    <label for="setor">Setor:</label>
+    <select name="setor" id="setor" required>
+      <option value="">Selecione</option>
+      <option>TI</option><option>Produção</option><option>Financeiro</option>
+      <option>Processos</option><option>Compras</option><option>RH</option>
+      <option>DP</option><option>Contabilidade</option><option>Comercial</option>
+      <option>Televendas</option><option>Logística</option><option>Marketing</option>
+      <option>Diretoria</option>
+    </select>
+
+    <label for="problema">Tipo de Problema:</label>
+    <select name="problema" id="problema" required>
+      <option value="">Selecione</option>
+      <option>Falha de impressão</option>
+      <option>Impressora travada</option>
+      <option>Abertura de tabela de preço</option>
+      <option>Precificação de produtos</option>
+      <option>Computador travando/lento</option>
+      <option>Problemas de rede</option>
+      <option>Sistema indisponível</option>
+      <option>Cadastro RCA</option>
+      <option>Erro Transmissão NFE</option>
+      <option>Troca Toner Impressora</option>
+      <option>Solicitar Periféricos (fones,mouse)</option>
+      <option>Outros</option>
+    </select>
+
+    <div id="outro-problema" class="hidden">
+      <label for="outro">Descreva o problema:</label>
+      <textarea name="outro" id="outro" rows="4"></textarea>
+    </div>
+
+    <label for="urgencia">Urgência:</label>
+    <select name="urgencia" id="urgencia" required>
+      <option value="">Selecione</option><option>Baixa</option><option>Média</option><option>Alta</option>
+    </select>
+
+    <button type="submit">Enviar Chamado</button>
+    <div id="mensagem"></div>
+  </form>
+  <button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
+</div>
+
+<!-- FORM GUARITA -->
+<div id="formGuarita" class="form-container">
+  <form id="formGuaritaForm">
+    <h1>Agendamento Guarita</h1>
+    <label for="nomeG">Nome:</label><input type="text" name="nomeG" id="nomeG" required/>
+    <label for="setorG">Setor:</label><input type="text" name="setorG" id="setorG" required/>
+    <label for="visitante">Visitante:</label><input type="text" name="visitante" id="visitante" required/>
+    <label for="motivo">Motivo:</label><input type="text" name="motivo" id="motivo" required/>
+    <label for="data">Data:</label><input type="date" name="data" id="data" required/>
+    <label for="hora">Hora:</label><input type="time" name="hora" id="hora" required/>
+    <label for="obs">Observações:</label><textarea name="obs" id="obs" rows="3"></textarea>
+    <button type="submit">Enviar Agendamento</button>
+    <div id="mensagemGuarita"></div>
+  </form>
+  <button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
+</div>
+
+<script>
+// === CONTROLE DE TELAS ===
+const menu=document.getElementById('menu');
+const formChamado=document.getElementById('formChamado');
+const formGuarita=document.getElementById('formGuarita');
+document.getElementById('btnChamado').addEventListener('click', ()=>{menu.style.display='none'; formChamado.style.display='block';});
+document.getElementById('btnGuarita').addEventListener('click', ()=>{menu.style.display='none'; formGuarita.style.display='block';});
+function voltarMenu(){ formChamado.style.display='none'; formGuarita.style.display='none'; menu.style.display='flex'; }
+
+// === CHAMADO TI ===
+const scriptChamado='https://script.google.com/macros/s/AKfycbw8bt5spo8b1Ve77XhYHC0N9jiMH6c-je-84C1zvsld1gHCcpUxAm-K9I1ySlW4huiJ/exec';
+const form=document.getElementById('form');
+const outroInput=document.getElementById('outro-problema');
+const problemaSelect=document.getElementById('problema');
+const mensagem=document.getElementById('mensagem');
+
+const tempos={
+  "Falha de impressão":"10 minutos",
+  "Impressora travada":"10 minutos",
+  "Abertura de tabela de preço":"10 minutos",
+  "Precificação de produtos":"20 minutos",
+  "Computador travando/lento":"20 minutos",
+  "Problemas de rede":"20 minutos",
+  "Sistema indisponível":"30 minutos",
+  "Cadastro RCA":"20 minutos",
+  "Erro Transmissão NFE":"30 minutos",
+  "Troca Toner Impressora":"15 minutos",
+  "Solicitar Periféricos (fones,mouse)":"15 minutos",
+  "Outros":"15 minutos"
+};
+
+problemaSelect.addEventListener('change',()=>{ outroInput.classList.toggle('hidden',problemaSelect.value!=='Outros'); });
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const data=new FormData(form);
+  const tempo=tempos[problemaSelect.value]||"15 minutos";
+  mensagem.textContent="⏳ Enviando chamado...";
+  mensagem.style.color="#ffd700";
+  mensagem.style.opacity=1;
+
+  fetch(scriptChamado,{method:'POST',body:new URLSearchParams(data)})
+  .then(r=>r.json())
+  .then(result=>{
+    if(result.result==="success"){ 
+      mensagem.innerHTML=`✅ Chamado enviado com sucesso!<br>⏳ Em até <b>${tempo}</b> nossa equipe entrará em contato ou resolverá o problema.`;
+      mensagem.style.color="#00ff88";
+    }else{mensagem.textContent="❌ Erro ao enviar. Tente novamente."; mensagem.style.color="#ff4444";}
+  })
+  .catch(()=>{mensagem.textContent="❌ Erro na conexão. Tente novamente."; mensagem.style.color="#ff4444";})
+  .finally(()=>{ form.reset(); outroInput.classList.add("hidden"); setTimeout(()=>mensagem.style.opacity=0,5000); });
+});
+
+// === GUARITA ===
+const scriptGuarita='https://script.google.com/macros/s/AKfycbwsLgZxTwI4jod2SlL6IU1xZmYYj5hWy0-X_1Wki9GeNGlW40x8Bv5bbADRkjOiqHaM/exec';
+const formG=document.getElementById('formGuaritaForm');
+const mensagemG=document.getElementById('mensagemGuarita');
+
+formG.addEventListener('submit',e=>{
+  e.preventDefault();
+  const data=new FormData(formG);
+  mensagemG.textContent="⏳ Enviando agendamento...";
+  mensagemG.style.color="#ffd700";
+  mensagemG.style.opacity=1;
+
+  fetch(scriptGuarita,{method:'POST',body:new URLSearchParams(data)})
+  .then(r=>r.json())
+  .then(result=>{
+    if(result.result==="success"){ 
+      mensagemG.textContent="✅ Agendamento enviado com sucesso!";
+      mensagemG.style.color="#00ff88";
+    }else{
+      mensagemG.textContent="❌ Erro ao enviar. Tente novamente."; 
+      mensagemG.style.color="#ff4444";
+    }
+  })
+  .catch(()=>{mensagemG.textContent="❌ Erro na conexão. Tente novamente."; mensagemG.style.color="#ff4444";})
+  .finally(()=>{ formG.reset(); setTimeout(()=>mensagemG.style.opacity=0,5000); });
+});
+</script>
+</body>
+</html>
+
+
