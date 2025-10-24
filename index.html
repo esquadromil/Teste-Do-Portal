@@ -89,9 +89,10 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
 }
 .hidden { display:none; }
 
-/* LOGIN */
-#login { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; }
-#login input { margin:8px 0; }
+/* LOGIN MELHORADO */
+#login { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; max-width:400px; margin:50px auto; padding:40px; background: rgba(0,0,0,0.25); border-radius:20px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+#login input { margin:8px 0; padding:12px; font-size:16px; border-radius:8px; }
+#login button { width:100%; padding:12px; font-size:18px; margin-top:15px; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -106,7 +107,7 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
 
 <!-- LOGIN -->
 <div id="login">
-  <h1>Login Portal</h1>
+  <h1 style="margin-bottom:20px; text-align:center; font-size:2em; text-shadow:0 0 10px rgba(0,0,0,0.5);">Portal Esquadromil</h1>
   <input type="email" id="email" placeholder="Email"/>
   <input type="password" id="senha" placeholder="Senha"/>
   <button id="btnLogin">Entrar</button>
@@ -118,6 +119,7 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
   <p class="slogan">Sistema de suporte e comunicação — tecnologia que conecta</p>
   <button class="menu-btn" id="btnChamado">💻 Chamado TI</button>
   <button class="menu-btn" id="btnGuarita">🛡️ Agendamento Guarita</button>
+  <button class="menu-btn" id="btnLogout">🚪 Sair</button>
 </div>
 
 <!-- FORM CHAMADO TI -->
@@ -191,14 +193,29 @@ const SUPABASE_URL = 'https://erqkfifyrchqhevyfavl.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVycWtmaWZ5cmNocWhldnlmYXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMjIzNjQsImV4cCI6MjA3Njg5ODM2NH0.4pGclAk_p4KhcsU4rtTW-gOqUxupBKrA-S_CWmLEiSk';
 const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// === LOGIN ===
 const loginDiv = document.getElementById('login');
 const menu = document.getElementById('menu');
 const msgLogin = document.getElementById('msgLogin');
 
+// CHECK SESSÃO
+window.addEventListener('load', async ()=>{
+  const { data: { session } } = await supabase.auth.getSession();
+  if(session){
+    loginDiv.style.display = 'none';
+    menu.style.display = 'flex';
+  }
+});
+
+// LOGIN
 document.getElementById('btnLogin').addEventListener('click', async ()=>{
   const email = document.getElementById('email').value;
   const senha = document.getElementById('senha').value;
+
+  if(!email || !senha){
+    msgLogin.textContent = "❌ Preencha email e senha";
+    msgLogin.style.color = "red";
+    return;
+  }
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
 
@@ -213,7 +230,15 @@ document.getElementById('btnLogin').addEventListener('click', async ()=>{
   }
 });
 
-// === CONTROLE DE TELAS ===
+// LOGOUT
+document.getElementById('btnLogout').addEventListener('click', async ()=>{
+  await supabase.auth.signOut();
+  loginDiv.style.display = 'flex';
+  menu.style.display = 'none';
+  msgLogin.textContent = '';
+});
+
+// CONTROLE DE TELAS
 const formChamado=document.getElementById('formChamado');
 const formGuarita=document.getElementById('formGuarita');
 document.getElementById('btnChamado').addEventListener('click', ()=>{menu.style.display='none'; formChamado.style.display='block';});
