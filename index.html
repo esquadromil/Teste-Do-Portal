@@ -27,15 +27,11 @@ body {
   z-index:10; animation: fadeOutIntro 1s ease 3.5s forwards;
 }
 #intro img { width:200px; animation: logoGrow 3s ease forwards; }
-@keyframes logoGrow {
-  0% { transform: scale(0.5); opacity: 0; }
-  50% { transform: scale(0.8); opacity: 0.7; }
-  100% { transform: scale(1); opacity: 1; }
-}
-@keyframes fadeOutIntro { to { opacity:0; visibility:hidden; } }
+@keyframes logoGrow { 0%{transform:scale(0.5);opacity:0;}50%{transform:scale(0.8);opacity:0.7;}100%{transform:scale(1);opacity:1;} }
+@keyframes fadeOutIntro { to{opacity:0;visibility:hidden;} }
 header {
   position: fixed; top:0; width:100%; padding:12px 0;
-  text-align:center; background: rgba(255, 255, 255, 0.85);
+  text-align:center; background: rgba(255,255,255,0.85);
   backdrop-filter: blur(4px); z-index:5;
 }
 header img { height:60px; transition: transform 0.3s; }
@@ -49,11 +45,11 @@ header img:hover { transform: scale(1.05); }
 }
 #menu::before {
   content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
-  background: rgba(27, 47, 145, 0.5); z-index:0;
+  background: rgba(27,47,145,0.5); z-index:0;
 }
 #menu > * { position: relative; z-index:1; }
 h1 { font-size:2.5em; text-shadow:0 0 15px rgba(0,0,0,0.4);}
-p.slogan { font-size:1.2em; color:rgba(255,255,255,0.8); margin-bottom:40px; }
+p.slogan { font-size:1.2em; color:rgba(255,255,255,0.8); margin-bottom:40px; text-align:center; padding:0 10px;}
 .menu-btn {
   background: var(--branco); color: var(--azul); font-weight:bold; padding:18px 50px;
   border-radius:16px; border:none; font-size:20px; cursor:pointer;
@@ -84,43 +80,46 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
   transition:0.2s; box-shadow:0 0 8px var(--branco);
 }
 .voltar-btn:hover { background: rgba(255,255,255,0.2); }
-#mensagem,#mensagemGuarita,#msgLogin {
-  margin-top:20px; font-weight:bold; transition:opacity 1s ease; color:#00ff88;
-}
+#mensagem,#mensagemGuarita { margin-top:20px; font-weight:bold; transition:opacity 1s ease; color:#00ff88; }
 .hidden { display:none; }
 
-/* LOGIN */
-#login { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; }
-#login input { margin:8px 0; padding:12px; font-size:16px; border-radius:8px; border:1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; }
-#login input::placeholder { color: rgba(255,255,255,0.7); }
-#btnLogout { display:none; margin-top:20px; background:#444; }
+/* === SCANNER === */
+#scannerContainer {
+  display:none; flex-direction:column; align-items:center; padding:100px 20px 40px;
+}
+#scannerContainer video {
+  border:3px solid var(--vermelho); border-radius:12px; width:100%; max-width:500px; margin-bottom:15px;
+}
+.scanner-buttons {
+  display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:15px;
+}
+.scanner-buttons button { flex:1 1 45%; min-width:120px; }
+#history { list-style:none; padding:0; width:100%; max-width:500px; }
+#history li { background:rgba(255,255,255,0.1); margin:5px 0; padding:10px; border-radius:8px; word-break:break-word; }
+#senhaContainer {
+  display:none; text-align:center; padding:100px 20px 40px;
+}
+#senhaContainer input {
+  max-width:300px; margin-top:10px; text-align:center;
+}
+@media(max-width:600px){
+  h1{font-size:2em;}
+  .menu-btn{width:80%; font-size:18px; padding:15px;}
+}
 </style>
 </head>
 <body>
 
-<div id="intro">
-  <img src="logobranca.png" alt="Logo Esquadromil">
-</div>
+<div id="intro"><img src="logobranca.png" alt="Logo Esquadromil"></div>
+<header><img src="logocolorida.png" alt="Logo Esquadromil"></header>
 
-<header>
-  <img src="logocolorida.png" alt="Logo Esquadromil">
-</header>
-
-<!-- LOGIN -->
-<div id="login">
-  <h1>Login Portal</h1>
-  <input type="email" id="email" placeholder="Email"/>
-  <input type="password" id="senha" placeholder="Senha"/>
-  <button id="btnLogin">Entrar</button>
-  <button id="btnLogout">Sair</button>
-  <div id="msgLogin"></div>
-</div>
-
-<div id="menu" style="display:none;">
+<!-- MENU PRINCIPAL -->
+<div id="menu">
   <h1>Portal Esquadromil</h1>
   <p class="slogan">Sistema de suporte e comunicação — tecnologia que conecta</p>
   <button class="menu-btn" id="btnChamado">💻 Chamado TI</button>
   <button class="menu-btn" id="btnGuarita">🛡️ Agendamento Guarita</button>
+  <button class="menu-btn" id="btnScanner">📷 Scanner QR</button>
 </div>
 
 <!-- FORM CHAMADO TI -->
@@ -130,41 +129,26 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
     <label for="nome">Nome:</label><input type="text" name="nome" id="nome" required/>
     <label for="setor">Setor:</label>
     <select name="setor" id="setor" required>
-      <option value="">Selecione</option>
-      <option>TI</option><option>Produção</option><option>Financeiro</option>
-      <option>Processos</option><option>Compras</option><option>RH</option>
-      <option>DP</option><option>Contabilidade</option><option>Comercial</option>
-      <option>Televendas</option><option>Logística</option><option>Marketing</option>
-      <option>Diretoria</option>
+      <option value="">Selecione</option><option>TI</option><option>Produção</option><option>Financeiro</option>
+      <option>Processos</option><option>Compras</option><option>RH</option><option>DP</option>
+      <option>Contabilidade</option><option>Comercial</option><option>Televendas</option><option>Logística</option>
+      <option>Marketing</option><option>Diretoria</option>
     </select>
-
     <label for="problema">Tipo de Problema:</label>
     <select name="problema" id="problema" required>
-      <option value="">Selecione</option>
-      <option>Falha de impressão</option>
-      <option>Impressora travada</option>
-      <option>Abertura de tabela de preço</option>
-      <option>Precificação de produtos</option>
-      <option>Computador travando/lento</option>
-      <option>Problemas de rede</option>
-      <option>Sistema indisponível</option>
-      <option>Cadastro RCA</option>
-      <option>Erro Transmissão NFE</option>
-      <option>Troca Toner Impressora</option>
-      <option>Solicitar Periféricos (fones,mouse)</option>
-      <option>Outros</option>
+      <option value="">Selecione</option><option>Falha de impressão</option><option>Impressora travada</option>
+      <option>Abertura de tabela de preço</option><option>Precificação de produtos</option>
+      <option>Computador travando/lento</option><option>Problemas de rede</option>
+      <option>Sistema indisponível</option><option>Cadastro RCA</option><option>Erro Transmissão NFE</option>
+      <option>Troca Toner Impressora</option><option>Solicitar Periféricos (fones,mouse)</option><option>Outros</option>
     </select>
-
     <div id="outro-problema" class="hidden">
-      <label for="outro">Descreva o problema:</label>
-      <textarea name="outro" id="outro" rows="4"></textarea>
+      <label for="outro">Descreva o problema:</label><textarea name="outro" id="outro" rows="4"></textarea>
     </div>
-
     <label for="urgencia">Urgência:</label>
     <select name="urgencia" id="urgencia" required>
       <option value="">Selecione</option><option>Baixa</option><option>Média</option><option>Alta</option>
     </select>
-
     <button type="submit">Enviar Chamado</button>
     <div id="mensagem"></div>
   </form>
@@ -188,61 +172,66 @@ button:hover { background-color:#ff5555; box-shadow:0 0 18px var(--glow-vermelho
   <button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+<!-- 🔐 SENHA -->
+<div id="senhaContainer">
+  <h1>🔒 Acesso Restrito</h1>
+  <p>Digite a senha para acessar o Scanner:</p>
+  <input type="password" id="senhaInput" placeholder="Senha" />
+  <button id="btnValidarSenha">Acessar</button>
+  <div id="senhaMsg"></div>
+  <button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
+</div>
+
+<!-- 📷 SCANNER -->
+<div id="scannerContainer">
+  <h1>📷 Scanner de QR Codes</h1>
+  <video id="video" playsinline></video>
+  <div class="scanner-buttons">
+    <button id="startBtn">Iniciar Câmera</button>
+    <button id="stopBtn">Parar Câmera</button>
+    <button id="exportBtn">Exportar Excel</button>
+    <button id="clearBtn">Limpar Histórico</button>
+  </div>
+  <ul id="history"></ul>
+  <button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.18.6/umd/index.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 <script>
-const SUPABASE_URL = 'https://erqkfifyrchqhevyfavl.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVycWtmaWZ5cmNocWhldnlmYXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMjIzNjQsImV4cCI6MjA3Njg5ODM2NH0.4pGclAk_p4KhcsU4rtTW-gOqUxupBKrA-S_CWmLEiSk';
-const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// === LOGIN / LOGOUT ===
-const loginDiv = document.getElementById('login');
-const menu = document.getElementById('menu');
-const msgLogin = document.getElementById('msgLogin');
-const btnLogout = document.getElementById('btnLogout');
-
-async function checkSession() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if(session){
-    loginDiv.style.display='none';
-    menu.style.display='flex';
-    btnLogout.style.display='block';
-  }
-}
-
-checkSession();
-
-document.getElementById('btnLogin').addEventListener('click', async ()=>{
-  const email = document.getElementById('email').value;
-  const senha = document.getElementById('senha').value;
-
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
-
-  if(error){
-    msgLogin.textContent = "❌ Erro no login";
-    msgLogin.style.color = "red";
-  } else {
-    msgLogin.textContent = "✅ Login bem-sucedido!";
-    msgLogin.style.color = "green";
-    loginDiv.style.display = 'none';
-    menu.style.display = 'flex';
-    btnLogout.style.display='block';
-  }
-});
-
-btnLogout.addEventListener('click', async ()=>{
-  await supabase.auth.signOut();
-  loginDiv.style.display='flex';
-  menu.style.display='none';
-  btnLogout.style.display='none';
-  msgLogin.textContent='';
-});
-
 // === CONTROLE DE TELAS ===
+const menu=document.getElementById('menu');
 const formChamado=document.getElementById('formChamado');
 const formGuarita=document.getElementById('formGuarita');
-document.getElementById('btnChamado').addEventListener('click', ()=>{menu.style.display='none'; formChamado.style.display='block';});
-document.getElementById('btnGuarita').addEventListener('click', ()=>{menu.style.display='none'; formGuarita.style.display='block';});
-function voltarMenu(){ formChamado.style.display='none'; formGuarita.style.display='none'; menu.style.display='flex'; }
+const senhaContainer=document.getElementById('senhaContainer');
+const scannerContainer=document.getElementById('scannerContainer');
+
+document.getElementById('btnChamado').onclick=()=>{menu.style.display='none';formChamado.style.display='block';}
+document.getElementById('btnGuarita').onclick=()=>{menu.style.display='none';formGuarita.style.display='block';}
+document.getElementById('btnScanner').onclick=()=>{menu.style.display='none';senhaContainer.style.display='block';}
+
+function voltarMenu(){
+  [formChamado,formGuarita,senhaContainer,scannerContainer].forEach(el=>el.style.display='none');
+  menu.style.display='flex';
+}
+
+// === SENHA ===
+const senhaInput=document.getElementById('senhaInput');
+const senhaMsg=document.getElementById('senhaMsg');
+document.getElementById('btnValidarSenha').onclick=()=>{
+  if(senhaInput.value==="TIESQUADROMIL"){
+    senhaMsg.style.color="#00ff88";
+    senhaMsg.textContent="✅ Acesso liberado!";
+    setTimeout(()=>{
+      senhaContainer.style.display='none';
+      scannerContainer.style.display='flex';
+    },600);
+  }else{
+    senhaMsg.style.color="#ff5555";
+    senhaMsg.textContent="❌ Senha incorreta!";
+  }
+}
 
 // === CHAMADO TI ===
 const scriptChamado='https://script.google.com/macros/s/AKfycbw8bt5spo8b1Ve77XhYHC0N9jiMH6c-je-84C1zvsld1gHCcpUxAm-K9I1ySlW4huiJ/exec';
@@ -250,70 +239,78 @@ const form=document.getElementById('form');
 const outroInput=document.getElementById('outro-problema');
 const problemaSelect=document.getElementById('problema');
 const mensagem=document.getElementById('mensagem');
-
-const tempos={
-  "Falha de impressão":"10 minutos",
-  "Impressora travada":"10 minutos",
-  "Abertura de tabela de preço":"10 minutos",
-  "Precificação de produtos":"20 minutos",
-  "Computador travando/lento":"20 minutos",
-  "Problemas de rede":"20 minutos",
-  "Sistema indisponível":"30 minutos",
-  "Cadastro RCA":"20 minutos",
-  "Erro Transmissão NFE":"30 minutos",
-  "Troca Toner Impressora":"15 minutos",
-  "Solicitar Periféricos (fones,mouse)":"15 minutos",
-  "Outros":"15 minutos"
-};
-
+const tempos={"Falha de impressão":"10 minutos","Impressora travada":"10 minutos","Abertura de tabela de preço":"10 minutos","Precificação de produtos":"20 minutos","Computador travando/lento":"20 minutos","Problemas de rede":"20 minutos","Sistema indisponível":"30 minutos","Cadastro RCA":"20 minutos","Erro Transmissão NFE":"30 minutos","Troca Toner Impressora":"15 minutos","Solicitar Periféricos (fones,mouse)":"15 minutos","Outros":"15 minutos"};
 problemaSelect.addEventListener('change',()=>{ outroInput.classList.toggle('hidden',problemaSelect.value!=='Outros'); });
-
-form.addEventListener('submit',async e=>{
+form.addEventListener('submit',e=>{
   e.preventDefault();
   const data=new FormData(form);
   const tempo=tempos[problemaSelect.value]||"15 minutos";
-  mensagem.textContent="⏳ Enviando chamado...";
-  mensagem.style.color="#ffd700";
-  mensagem.style.opacity=1;
-
+  mensagem.textContent="⏳ Enviando chamado...";mensagem.style.color="#ffd700";mensagem.style.opacity=1;
   fetch(scriptChamado,{method:'POST',body:new URLSearchParams(data)})
-  .then(r=>r.json())
-  .then(result=>{
-    if(result.result==="success"){ 
-      mensagem.innerHTML=`✅ Chamado enviado com sucesso!<br>⏳ Em até <b>${tempo}</b> nossa equipe entrará em contato ou resolverá o problema.`;
+  .then(r=>r.json()).then(result=>{
+    if(result.result==="success"){
+      mensagem.innerHTML=`✅ Chamado enviado com sucesso!<br>⏳ Em até <b>${tempo}</b> nossa equipe entrará em contato.`;
       mensagem.style.color="#00ff88";
-    }else{mensagem.textContent="❌ Erro ao enviar. Tente novamente."; mensagem.style.color="#ff4444";}
-  })
-  .catch(()=>{mensagem.textContent="❌ Erro na conexão. Tente novamente."; mensagem.style.color="#ff4444";})
-  .finally(()=>{ form.reset(); outroInput.classList.add("hidden"); setTimeout(()=>mensagem.style.opacity=0,5000); });
+    }else{mensagem.textContent="❌ Erro ao enviar.";mensagem.style.color="#ff4444";}
+  }).catch(()=>{mensagem.textContent="❌ Erro na conexão.";mensagem.style.color="#ff4444";})
+  .finally(()=>{form.reset();outroInput.classList.add("hidden");setTimeout(()=>mensagem.style.opacity=0,5000);});
 });
 
 // === GUARITA ===
 const scriptGuarita='https://script.google.com/macros/s/AKfycbwsLgZxTwI4jod2SlL6IU1xZmYYj5hWy0-X_1Wki9GeNGlW40x8Bv5bbADRkjOiqHaM/exec';
 const formG=document.getElementById('formGuaritaForm');
 const mensagemG=document.getElementById('mensagemGuarita');
-
 formG.addEventListener('submit',e=>{
   e.preventDefault();
   const data=new FormData(formG);
-  mensagemG.textContent="⏳ Enviando agendamento...";
-  mensagemG.style.color="#ffd700";
-  mensagemG.style.opacity=1;
-
+  mensagemG.textContent="⏳ Enviando agendamento...";mensagemG.style.color="#ffd700";
   fetch(scriptGuarita,{method:'POST',body:new URLSearchParams(data)})
-  .then(r=>r.json())
-  .then(result=>{
-    if(result.result==="success"){ 
-      mensagemG.textContent="✅ Agendamento enviado com sucesso!";
-      mensagemG.style.color="#00ff88";
-    }else{
-      mensagemG.textContent="❌ Erro ao enviar. Tente novamente."; 
-      mensagemG.style.color="#ff4444";
-    }
-  })
-  .catch(()=>{mensagemG.textContent="❌ Erro na conexão. Tente novamente."; mensagemG.style.color="#ff4444";})
-  .finally(()=>{ formG.reset(); setTimeout(()=>mensagemG.style.opacity=0,5000); });
+  .then(r=>r.json()).then(result=>{
+    if(result.result==="success"){mensagemG.textContent="✅ Agendamento enviado com sucesso!";mensagemG.style.color="#00ff88";}
+    else{mensagemG.textContent="❌ Erro ao enviar.";mensagemG.style.color="#ff4444";}
+  }).catch(()=>{mensagemG.textContent="❌ Erro na conexão.";mensagemG.style.color="#ff4444";})
+  .finally(()=>{formG.reset();setTimeout(()=>mensagemG.style.opacity=0,5000);});
 });
+
+// === SCANNER ===
+const video=document.getElementById('video');
+const historyList=document.getElementById('history');
+const startBtn=document.getElementById('startBtn');
+const stopBtn=document.getElementById('stopBtn');
+const exportBtn=document.getElementById('exportBtn');
+const clearBtn=document.getElementById('clearBtn');
+const codeReader=new ZXing.BrowserQRCodeReader();
+let currentStream=null;let scannedData=[];
+
+startBtn.onclick=async()=>{
+  try{
+    const devices=await codeReader.listVideoInputDevices();
+    const deviceId=devices[0].deviceId;
+    currentStream=await navigator.mediaDevices.getUserMedia({video:{deviceId}});
+    video.srcObject=currentStream;video.play();
+    codeReader.decodeFromVideoDevice(deviceId,video,(result,err)=>{
+      if(result){
+        const text=result.text;
+        if(!scannedData.includes(text)){
+          scannedData.push(text);
+          const li=document.createElement('li');li.textContent=text;historyList.prepend(li);
+        }
+      }
+    });
+  }catch(e){alert("Erro ao acessar câmera: "+e);}
+};
+stopBtn.onclick=()=>{
+  if(currentStream){currentStream.getTracks().forEach(t=>t.stop());currentStream=null;}
+  codeReader.reset();video.srcObject=null;
+};
+clearBtn.onclick=()=>{scannedData=[];historyList.innerHTML="";}
+exportBtn.onclick=()=>{
+  if(scannedData.length===0){alert("Nenhum dado para exportar.");return;}
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet([["QR Codes Escaneados"],...scannedData.map(v=>[v])]);
+  XLSX.utils.book_append_sheet(wb,ws,"QR Codes");
+  XLSX.writeFile(wb,"ScannerQR_Esquadromil.xlsx");
+};
 </script>
 </body>
 </html>
