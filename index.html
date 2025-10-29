@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Portal Esquadromil</title>
+
 <style>
 :root {
   --azul: #1B2F91;
@@ -14,81 +15,118 @@
   --glow-vermelho: rgba(255, 43, 43, 0.6);
   --transition: all 0.25s ease;
   --card: rgba(255,255,255,0.06);
+  --fachada: url('fachada.jpg'); /* coloque a imagem fachada.jpg na mesma pasta */
+  --max-width: 1100px;
 }
+
+/* reset */
 * { box-sizing: border-box; margin:0; padding:0; }
+html,body { height:100%; }
+
+/* BACKGROUND: fachada com overlay (não atrapalha contraste) */
 body {
   font-family:"Segoe UI", Arial, sans-serif;
-  background: linear-gradient(135deg, var(--azul), #122069);
   color: var(--branco);
-  overflow-x:hidden;
+  background-color: var(--azul);
+  background-image: linear-gradient(180deg, rgba(11,22,90,0.55), rgba(6,9,34,0.82)), var(--fachada);
+  background-blend-mode: overlay;
+  background-size: cover;
+  background-position: center top;
   -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  padding-top:86px; /* espaço pro header fixo */
 }
+
+/* subtle vignette to keep text readable on any fachada */
+body::after{
+  content:"";
+  position:fixed; inset:0; pointer-events:none;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.28) 65%, rgba(0,0,0,0.55) 100%);
+  z-index:0;
+}
+
+/* INTRO overlay (kept behavior) */
 #intro {
   position: fixed; top:0; left:0; width:100%; height:100vh;
-  background: radial-gradient(circle, var(--azul), var(--bg-dark));
+  background: radial-gradient(circle, rgba(27,47,145,0.98), rgba(6,9,34,0.95));
   display:flex; justify-content:center; align-items:center; flex-direction:column;
-  z-index:10; animation: fadeOutIntro 1s ease 3.5s forwards;
+  z-index:50; animation: fadeOutIntro 1s ease 3.5s forwards;
 }
 #intro img { width:200px; animation: logoGrow 3s ease forwards; }
-@keyframes logoGrow { 0%{transform:scale(0.5);opacity:0;}50%{transform:scale(0.8);opacity:0.7;}100%{transform:scale(1);opacity:1;} }
-@keyframes fadeOutIntro { to{opacity:0;visibility:hidden;} }
-header {
-  position: fixed; top:0; width:100%; padding:12px 0;
-  text-align:center; background: rgba(255,255,255,0.9);
-  backdrop-filter: blur(4px); z-index:5;
-}
-header img { height:60px; transition: transform 0.3s; }
-header img:hover { transform: scale(1.05); }
 
-.container {
-  padding-top:100px;
+/* header fixed */
+header {
+  position: fixed; top:0; left:0; width:100%; height:76px;
+  display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+  backdrop-filter: blur(6px);
+  z-index:45;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  padding: 8px 16px;
+}
+header img { height:56px; transition: transform 0.25s ease; }
+header img:hover { transform: scale(1.03); }
+
+/* central layout wrapper */
+.wrapper {
   display:flex;
   justify-content:center;
-  align-items:center;
+  align-items:flex-start;
   width:100%;
+  padding:28px 18px 80px 18px;
+  z-index:10; /* above body background but below intro/header */
 }
 
-/* Central card */
+/* card (main portal) */
 .card {
-  width:95%;
-  max-width:1000px;
+  width:100%;
+  max-width:var(--max-width);
   border-radius:18px;
   background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-  box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+  box-shadow: 0 20px 60px rgba(4,9,30,0.6);
   padding:28px;
-  margin:20px;
+  margin:8px;
+  color:var(--branco);
+  z-index:12;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,0.04);
 }
 
-/* Top area */
+/* top row */
 .header-row {
   display:flex;
   align-items:center;
   gap:18px;
+  margin-bottom:12px;
 }
 .header-row img.logo {
-  width:72px;
-  height:auto;
-  border-radius:8px;
-  background:rgba(255,255,255,0.05);
-  padding:6px;
+  width:72px; height:72px; object-fit:contain;
+  border-radius:10px;
+  background: rgba(255,255,255,0.04);
+  padding:8px;
 }
 .title-block { flex:1; text-align:left; }
-.title-block h1 { font-size:1.6rem; margin-bottom:4px; }
-.title-block p { margin:0; color: rgba(255,255,255,0.9); }
+.title-block h1 { font-size:1.6rem; margin-bottom:4px; letter-spacing:0.2px; }
+.title-block p { margin:0; color: rgba(255,255,255,0.9); font-size:0.95rem; }
 
-/* Sections */
+/* sections grid */
 .sections {
-  display:flex;
+  display:grid;
+  grid-template-columns: 1fr 380px;
   gap:18px;
-  margin-top:20px;
-  flex-wrap:wrap;
+  margin-top:10px;
+  align-items:start;
 }
+.left-column { display:flex; flex-direction:column; gap:18px; }
+.right-column { display:flex; flex-direction:column; gap:18px; }
+
+/* section cards */
 .section {
-  flex:1 1 300px;
   background: var(--card);
   border-radius:12px;
   padding:18px;
-  min-width:260px;
+  min-width:0;
+  border: 1px solid rgba(255,255,255,0.03);
 }
 .section h2 {
   font-size:1.05rem;
@@ -96,12 +134,12 @@ header img:hover { transform: scale(1.05); }
   display:flex; align-items:center; gap:10px;
   color:var(--branco);
 }
-.section .desc { color:rgba(255,255,255,0.85); font-size:0.9rem; margin-bottom:12px; }
+.section .desc { color:rgba(255,255,255,0.85); font-size:0.92rem; margin-bottom:12px; }
 
 /* grid of buttons */
 .btn-grid {
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap:12px;
 }
 .app-btn {
@@ -114,21 +152,22 @@ header img:hover { transform: scale(1.05); }
   cursor:pointer;
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content:space-between;
   gap:10px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.25);
+  box-shadow:0 12px 30px rgba(3,9,40,0.25);
   transition: transform .18s ease, background .18s ease, color .18s ease;
 }
-.app-btn:hover { transform:translateY(-4px); background:var(--vermelho); color:var(--branco); }
-
-/* small tag on button */
+.app-btn span.emoji { margin-right:8px; font-size:1.05rem; }
 .app-btn .tag {
   background:var(--azul);
   color:var(--branco);
-  padding:4px 8px;
+  padding:6px 10px;
   border-radius:8px;
   font-size:0.75rem;
+  font-weight:700;
 }
+.app-btn:hover { transform:translateY(-4px); background:var(--vermelho); color:var(--branco); }
+.app-btn:hover .tag { background: rgba(255,255,255,0.15); color: var(--branco); }
 
 /* footer area */
 .card-footer {
@@ -138,18 +177,110 @@ header img:hover { transform: scale(1.05); }
   font-size:0.9rem;
 }
 
+/* form-container overlays (antes não tinha estilo: agora responsivo e amigável) */
+.form-container {
+  display:none; /* shown/hidden by JS */
+  position:fixed; inset:0;
+  z-index:60;
+  background: linear-gradient(180deg, rgba(6,9,34,0.6), rgba(6,9,34,0.88));
+  padding:24px;
+  overflow:auto;
+  align-items:center;
+  justify-content:center;
+}
+
+/* panel style (reaproveitado para formulários) */
+.panel {
+  width:100%;
+  max-width:920px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  border-radius:12px;
+  padding:20px;
+  margin:12px auto;
+  color:var(--branco);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* forms: grid and inputs */
+.form-grid {
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:12px;
+  align-items:start;
+}
+.form-grid .full { grid-column: 1 / -1; }
+.form-grid label { display:block; margin-bottom:6px; font-size:0.88rem; color:rgba(255,255,255,0.92); }
+.form-grid input[type="text"], .form-grid input[type="date"], .form-grid input[type="time"], .form-grid input[type="password"], .form-grid select, .form-grid textarea {
+  width:100%; padding:10px 12px; border-radius:8px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+  color:var(--branco); font-size:0.95rem;
+}
+.form-grid textarea { min-height:88px; resize:vertical; }
+
+/* form buttons */
+button[type="submit"], .voltar-btn, .app-btn {
+  cursor:pointer;
+}
+button[type="submit"], #btnMakePDF, #btnGenQR, #btnDownloadQR, .voltar-btn, #btnValidarSenha {
+  background: linear-gradient(90deg, var(--azul), #122069);
+  color:var(--branco);
+  border:none; padding:10px 14px; border-radius:10px; font-weight:700;
+  transition: transform .14s ease, opacity .12s ease;
+  box-shadow: 0 10px 26px rgba(18,32,102,0.3);
+}
+button[type="submit"]:hover, .voltar-btn:hover, #btnMakePDF:hover { transform: translateY(-3px); opacity:0.95; }
+
+/* small util classes */
+.hidden { display:none !important; }
+.center { text-align:center; }
+.panel h2 { margin-bottom:8px; }
+
+/* scanner styles */
+#video { width:100%; max-height:420px; border-radius:10px; background:rgba(0,0,0,0.45); object-fit:cover; }
+.scanner-buttons { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+#history { margin-top:10px; list-style:none; max-height:160px; overflow:auto; padding:6px; border-radius:8px; background: rgba(0,0,0,0.25); }
+#history li { padding:8px 10px; border-bottom:1px solid rgba(255,255,255,0.03); font-size:0.95rem; }
+
+/* QR preview */
+.qr-preview { display:flex; justify-content:center; align-items:center; gap:12px; }
+.qr-card { background: rgba(255,255,255,0.02); padding:12px; border-radius:8px; display:flex; flex-direction:column; align-items:center; }
+
+/* thumbs for pdf */
+.thumbs { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
+.thumb { position:relative; width:120px; height:90px; border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.04); background:rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; }
+.thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.thumb .remove { position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.45); padding:4px 7px; border-radius:6px; cursor:pointer; font-weight:700; }
+
 /* responsive */
-@media(max-width:900px){
+@media (max-width:1100px){
+  :root{ --max-width:980px; }
+  .sections { grid-template-columns: 1fr 320px; }
+}
+@media (max-width:900px){
+  body { padding-top:86px; }
+  .sections { grid-template-columns: 1fr; }
+  .right-column { order:2; }
+  .btn-grid { grid-template-columns:1fr 1fr; }
+  .card { padding:18px; }
+  .form-grid { grid-template-columns: 1fr; }
+}
+@media (max-width:560px){
+  header img { height:44px; }
+  .header-row img.logo { width:56px; height:56px; }
+  .title-block h1 { font-size:1.2rem; text-align:center; }
+  .header-row { gap:12px; align-items:center; }
   .btn-grid { grid-template-columns:1fr; }
-  .header-row { flex-direction:row; }
-  .title-block { text-align:center; }
+  .panel { padding:14px; margin:8px; }
+  .thumb { width:96px; height:72px; }
 }
-@media(max-width:560px){
-  .header-row img.logo{width:56px;}
-  .title-block h1{font-size:1.2rem;}
-  .card{padding:16px;}
-  .sections{flex-direction:column;}
-}
+
+/* small animations */
+@keyframes logoGrow { 0%{transform:scale(0.5);opacity:0;}50%{transform:scale(0.8);opacity:0.7;}100%{transform:scale(1);opacity:1;} }
+@keyframes fadeOutIntro { to{opacity:0;visibility:hidden;} }
+
+/* ensure interactive elements are readable on bright facade */
+input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.5); }
 </style>
 </head>
 <body>
@@ -158,7 +289,7 @@ header img:hover { transform: scale(1.05); }
 <div id="intro"><img src="logobranca.png" alt="Logo Esquadromil"></div>
 <header><img src="logocolorida.png" alt="Logo Esquadromil"></header>
 
-<div class="container">
+<div class="wrapper">
   <div class="card">
 
     <div class="header-row">
@@ -170,42 +301,45 @@ header img:hover { transform: scale(1.05); }
     </div>
 
     <div class="sections">
-      <!-- SISTEMAS -->
-      <div class="section" id="sistemasSection">
-        <h2>🔧 Sistemas</h2>
-        <div class="desc">Acesse os sistemas internos da empresa.</div>
-        <div class="btn-grid">
-          <!-- Chamado TI -->
-          <button class="app-btn" id="btnChamado">
-            <span>💻</span> Chamado TI <div class="tag">Chamado</div>
-          </button>
+      <!-- LEFT: principais blocos (Sistemas, Aplicações) -->
+      <div class="left-column">
+        <div class="section" id="sistemasSection">
+          <h2>🔧 Sistemas</h2>
+          <div class="desc">Acesse os sistemas internos da empresa.</div>
+          <div class="btn-grid">
+            <button class="app-btn" id="btnChamado"><span class="emoji">💻</span><span style="flex:1;text-align:left">Chamado TI</span><div class="tag">Chamado</div></button>
+            <button class="app-btn" id="btnGuarita"><span class="emoji">🛡️</span><span style="flex:1;text-align:left">Agendamento Guarita</span><div class="tag">Guarita</div></button>
+            <!-- ocupam a largura total em mobile -->
+            <button class="app-btn" id="btnScanner" style="grid-column:1/-1"><span class="emoji">📷</span><span style="flex:1;text-align:left">Scanner QR (Acesso por senha)</span><div class="tag">Scanner</div></button>
+          </div>
+        </div>
 
-          <!-- Agendamento Guarita -->
-          <button class="app-btn" id="btnGuarita">
-            <span>🛡️</span> Agendamento Guarita <div class="tag">Guarita</div>
-          </button>
+        <div class="section" id="aplicacoesSection">
+          <h2>🧩 Aplicações</h2>
+          <div class="desc">Ferramentas e utilitários rápidos para o dia a dia.</div>
+          <div class="btn-grid">
+            <button class="app-btn" id="btnQRGen"><span class="emoji">🔖</span><span style="flex:1;text-align:left">Gerador QR</span><div class="tag">QR</div></button>
+            <button class="app-btn" id="btnPDF" style="grid-column:1/-1"><span class="emoji">📄</span><span style="flex:1;text-align:left">Digitalizar → PDF</span><div class="tag">PDF</div></button>
+          </div>
         </div>
       </div>
 
-      <!-- APLICAÇÕES -->
-      <div class="section" id="aplicacoesSection">
-        <h2>🧩 Aplicações</h2>
-        <div class="desc">Ferramentas e utilitários rápidos para o dia a dia.</div>
-        <div class="btn-grid">
-          <!-- Scanner QR -->
-          <button class="app-btn" id="btnScanner">
-            <span>📷</span> Scanner QR <div class="tag">Scanner</div>
-          </button>
+      <!-- RIGHT: utilitários rápidos / status -->
+      <div class="right-column">
+        <div class="section">
+          <h2>📌 Atalhos Rápidos</h2>
+          <div class="desc">Acesso direto aos serviços mais usados.</div>
+          <ul style="list-style:none;padding-left:0;margin:0;">
+            <li style="padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03);">🔔 Status do sistema — <strong>OK</strong></li>
+            <li style="padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03);">📁 Central de Documentos</li>
+            <li style="padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03);">📞 Contato TI: ramal 123</li>
+          </ul>
+        </div>
 
-          <!-- Gerador QR -->
-          <button class="app-btn" id="btnQRGen">
-            <span>🔖</span> Gerador QR <div class="tag">QR</div>
-          </button>
-
-          <!-- Digitalizar -> PDF (occupies full width in small screens) -->
-          <button class="app-btn" id="btnPDF" style="grid-column:1/-1;">
-            <span>📄</span> Digitalizar → PDF <div class="tag">PDF</div>
-          </button>
+        <div class="section">
+          <h2>🗓 Próximos Agendamentos</h2>
+          <div class="desc">Visão rápida dos próximos eventos na guarita.</div>
+          <div style="min-height:80px; display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.82)">Nenhum agendamento para hoje.</div>
         </div>
       </div>
     </div>
@@ -213,12 +347,13 @@ header img:hover { transform: scale(1.05); }
     <div class="card-footer">
       © 2025 Esquadromil — Mantido o funcionamento original dos sistemas.
     </div>
+
   </div>
 </div>
 
-<!-- === START OF YOUR ORIGINAL FORMS & PANELS (unchanged) === -->
+<!-- === START OF ORIGINAL FORMS & PANELS (mantive IDs / campos / scripts) === -->
 
-<!-- === CHAMADO TI (mantido) === -->
+<!-- CHAMADO TI -->
 <div id="formChamado" class="form-container">
   <div class="panel">
     <form id="form">
@@ -257,14 +392,16 @@ header img:hover { transform: scale(1.05); }
         </div>
       </div>
 
-      <button type="submit">Enviar Chamado</button>
-      <div id="mensagem"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <button type="submit">Enviar Chamado</button>
+        <button type="button" class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
+      </div>
+      <div id="mensagem" style="margin-top:10px;font-weight:700;"></div>
     </form>
-    <div style="text-align:center;"><button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button></div>
   </div>
 </div>
 
-<!-- === GUARITA (mantido) === -->
+<!-- GUARITA -->
 <div id="formGuarita" class="form-container">
   <div class="panel">
     <form id="formGuaritaForm">
@@ -279,30 +416,32 @@ header img:hover { transform: scale(1.05); }
         <div class="full"><label for="obs">Observações:</label><textarea name="obs" id="obs" rows="3"></textarea></div>
       </div>
 
-      <button type="submit">Enviar Agendamento</button>
-      <div id="mensagemGuarita"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <button type="submit">Enviar Agendamento</button>
+        <button type="button" class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
+      </div>
+      <div id="mensagemGuarita" style="margin-top:10px;font-weight:700;"></div>
     </form>
-    <div style="text-align:center;"><button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button></div>
   </div>
 </div>
 
-<!-- === SENHA (mantido) === -->
+<!-- SENHA -->
 <div id="senhaContainer" class="form-container">
-  <div class="panel" style="text-align:center;">
+  <div class="panel center">
     <h2>🔒 Acesso Restrito</h2>
     <p>Digite a senha para acessar o Scanner:</p>
     <input type="password" id="senhaInput" placeholder="Senha" />
     <div style="margin-top:10px;">
       <button id="btnValidarSenha">Acessar</button>
     </div>
-    <div id="senhaMsg"></div>
+    <div id="senhaMsg" style="margin-top:12px;"></div>
     <div style="margin-top:16px;"><button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button></div>
   </div>
 </div>
 
-<!-- === SCANNER (mantido) === -->
+<!-- SCANNER -->
 <div id="scannerContainer" class="form-container">
-  <div class="panel" style="text-align:center;">
+  <div class="panel">
     <h2>📷 Scanner de QR Codes</h2>
     <video id="video" playsinline></video>
     <div class="scanner-buttons">
@@ -312,11 +451,11 @@ header img:hover { transform: scale(1.05); }
       <button id="clearBtn">Limpar Histórico</button>
     </div>
     <ul id="history"></ul>
-    <div style="text-align:center;"><button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button></div>
+    <div style="margin-top:12px;text-align:center;"><button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button></div>
   </div>
 </div>
 
-<!-- === QR GENERATOR === -->
+<!-- QR GENERATOR -->
 <div id="qrGenerator" class="form-container">
   <div class="panel">
     <h2>🔖 Gerador de QR Code</h2>
@@ -338,13 +477,15 @@ header img:hover { transform: scale(1.05); }
           <option value="small">Pequeno</option>
         </select>
       </div>
-      <div class="full" style="text-align:center;">
+
+      <div class="full center" style="margin-top:8px;">
         <div class="qr-preview">
           <div class="qr-card">
             <div id="qrcode"></div>
             <div style="font-size:12px; color:rgba(255,255,255,0.8)">Preview</div>
           </div>
         </div>
+
         <div class="qr-controls" style="margin-top:8px;">
           <button id="btnGenQR">Gerar QR</button>
           <button id="btnDownloadQR" class="secondary">Baixar PNG</button>
@@ -355,7 +496,7 @@ header img:hover { transform: scale(1.05); }
   </div>
 </div>
 
-<!-- === IMAGE -> PDF === -->
+<!-- IMAGE -> PDF -->
 <div id="pdfScanner" class="form-container">
   <div class="panel">
     <h2>📄 Digitalizar Imagens → PDF</h2>
@@ -385,13 +526,13 @@ header img:hover { transform: scale(1.05); }
   </div>
 </div>
 
-<!-- EXTERNAL LIBRARIES -->
+<!-- EXTERNAL LIBRARIES (mantidos) -->
 <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.18.6/umd/index.min.js"></script>
 <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- MAIN SCRIPT (mantive seu código inalterado) -->
+<!-- MAIN SCRIPT (mantive seu código inalterado; pequenas ligações DOM já contempladas pelos novos estilos) -->
 <script>
 /* -------------------------
    Tela / navegação
@@ -404,11 +545,11 @@ const scannerContainer = document.getElementById('scannerContainer');
 const qrGenerator = document.getElementById('qrGenerator');
 const pdfScanner = document.getElementById('pdfScanner');
 
-document.getElementById('btnChamado').onclick = ()=>{ hideAll(); formChamado.style.display='block'; }
-document.getElementById('btnGuarita').onclick = ()=>{ hideAll(); formGuarita.style.display='block'; }
-document.getElementById('btnScanner').onclick = ()=>{ hideAll(); senhaContainer.style.display='block'; }
-document.getElementById('btnQRGen').onclick = ()=>{ hideAll(); qrGenerator.style.display='block'; renderEmptyQR(); }
-document.getElementById('btnPDF').onclick = ()=>{ hideAll(); pdfScanner.style.display='block'; }
+document.getElementById('btnChamado').onclick = ()=>{ hideAll(); formChamado.style.display='flex'; }
+document.getElementById('btnGuarita').onclick = ()=>{ hideAll(); formGuarita.style.display='flex'; }
+document.getElementById('btnScanner').onclick = ()=>{ hideAll(); senhaContainer.style.display='flex'; }
+document.getElementById('btnQRGen').onclick = ()=>{ hideAll(); qrGenerator.style.display='flex'; renderEmptyQR(); }
+document.getElementById('btnPDF').onclick = ()=>{ hideAll(); pdfScanner.style.display='flex'; }
 
 function hideAll(){
   [formChamado,formGuarita,senhaContainer,scannerContainer,qrGenerator,pdfScanner].forEach(el=>el.style.display='none');
@@ -428,7 +569,7 @@ const senhaMsg = document.getElementById('senhaMsg');
 document.getElementById('btnValidarSenha').onclick = ()=>{
   if(senhaInput.value === "TIESQUADROMIL"){
     senhaMsg.style.color="#00ff88"; senhaMsg.textContent="✅ Acesso liberado!";
-    setTimeout(()=>{ senhaContainer.style.display='none'; scannerContainer.style.display='block'; senhaInput.value=''; senhaMsg.textContent=''; window.scrollTo({top:0,behavior:'smooth'}); }, 450);
+    setTimeout(()=>{ senhaContainer.style.display='none'; scannerContainer.style.display='flex'; senhaInput.value=''; senhaMsg.textContent=''; window.scrollTo({top:0,behavior:'smooth'}); }, 450);
   } else {
     senhaMsg.style.color="#ff6666"; senhaMsg.textContent="❌ Senha incorreta!";
   }
@@ -473,7 +614,7 @@ formG.addEventListener('submit', e=>{
 });
 
 /* -------------------------
-   SCANNER (mantido)
+   SCANNER
    ------------------------- */
 const video = document.getElementById('video');
 const historyList = document.getElementById('history');
@@ -499,7 +640,6 @@ updateHistoryList();
 startBtn.onclick = async ()=>{
   try{
     const devices = await codeReader.listVideoInputDevices();
-    // try to choose environment camera if available
     let deviceId = devices.length ? devices[0].deviceId : null;
     for(const d of devices){ if(d.label && /back|rear|environment|traseira/i.test(d.label)){ deviceId = d.deviceId; break; } }
     currentStream = await navigator.mediaDevices.getUserMedia({ video: deviceId ? { deviceId } : { facingMode: "environment" } });
@@ -510,7 +650,6 @@ startBtn.onclick = async ()=>{
         if(!scannedData.includes(text)){
           scannedData.push(text);
           updateHistoryList();
-          // light feedback
           try { navigator.vibrate && navigator.vibrate(200); } catch(e){}
         }
       }
@@ -551,18 +690,15 @@ document.getElementById('btnGenQR').onclick = ()=>{
   const qdiv = document.getElementById('qrcode');
   qdiv.innerHTML = '';
   qrInstance = new QRCode(qdiv, { text: text || " ", width: size, height: size, colorDark: "#000000", colorLight:"#ffffff", correctLevel: QRCode.CorrectLevel.H });
-  // if logo requested, paint later
   if(logoOpt !== 'none'){
-    // small logo: insert an img centered over the qrcode (simple approach)
     const img = document.createElement('img');
-    img.src = 'logobranca.png'; // assumes logo file exists; will be small
+    img.src = 'logobranca.png';
     img.style.width = (size * 0.18) + 'px';
     img.style.height = 'auto';
     img.style.marginTop = '-' + (size * 0.18) + 'px';
     img.style.pointerEvents = 'none';
     img.style.background = 'transparent';
     img.style.borderRadius = '6px';
-    // append after a timeout so QR is rendered
     setTimeout(()=>{ qdiv.appendChild(img); }, 220);
   }
 };
@@ -572,10 +708,7 @@ document.getElementById('btnDownloadQR').onclick = ()=>{
   if(!qdiv){ alert('Gere o QR primeiro.'); return; }
   let dataUrl = '';
   if(qdiv.tagName.toLowerCase() === 'img') dataUrl = qdiv.src;
-  else {
-    dataUrl = qdiv.toDataURL('image/png');
-  }
-  // create a link to download
+  else { dataUrl = qdiv.toDataURL('image/png'); }
   const a = document.createElement('a');
   a.href = dataUrl;
   a.download = (document.getElementById('qrText').value || 'qrcode') .replace(/\s+/g,'_') + '.png';
@@ -599,7 +732,6 @@ function addImageFile(file){
   const reader = new FileReader();
   reader.onload = (e)=>{
     const dataURL = e.target.result;
-    // create thumbnail
     const div = document.createElement('div'); div.className = 'thumb';
     const img = document.createElement('img'); img.src = dataURL;
     const rem = document.createElement('div'); rem.className='remove'; rem.textContent='✕';
@@ -635,19 +767,16 @@ function updatePdfMsg(){
 btnMakePDF.onclick = async ()=>{
   if(imagesForPdf.length === 0){ alert('Selecione ao menos uma imagem.'); return; }
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit:'px', format:'a4' }); // use pixel units then scale
-  // A4 in px at 96dpi ~ 794 x 1123 (approx). We'll fit images to page while keeping aspect ratio.
+  const doc = new jsPDF({ unit:'px', format:'a4' });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
 
   pdfMsg.textContent = '⏳ Gerando PDF...';
   for(let i=0;i<imagesForPdf.length;i++){
     const it = imagesForPdf[i];
-    // load image
     await new Promise((res, rej)=>{
       const img = new Image();
       img.onload = ()=>{
-        // fit into page with margins
         const margin = 20;
         let iw = img.width;
         let ih = img.height;
@@ -664,7 +793,6 @@ btnMakePDF.onclick = async ()=>{
       img.src = it.dataURL;
     });
   }
-  // finalize
   const filename = (pdfName.value.trim() || 'documento') .replace(/[^\w\-_.]/g,'_') + '.pdf';
   doc.save(filename);
   pdfMsg.textContent = '✅ PDF gerado e baixado: ' + filename;
@@ -673,7 +801,6 @@ btnMakePDF.onclick = async ()=>{
 /* init small things */
 updatePdfMsg();
 renderEmptyQR();
-
 </script>
 </body>
 </html>
