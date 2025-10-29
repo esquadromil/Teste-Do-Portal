@@ -1,297 +1,150 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Portal Esquadromil</title>
-
 <style>
-:root {
-  --azul: #1B2F91;
-  --vermelho: #FF2B2B;
-  --branco: #FFFFFF;
-  --bg-dark: #0b165a;
-  --glow-azul: rgba(27, 47, 145, 0.6);
-  --glow-vermelho: rgba(255, 43, 43, 0.6);
-  --transition: all 0.25s ease;
+:root{
+  --azul:#1B2F91;
+  --vermelho:#FF2B2B;
+  --branco:#FFFFFF;
   --card: rgba(255,255,255,0.06);
-  --fachada: url('fachada.jpg'); /* coloque a imagem fachada.jpg na mesma pasta */
-  --max-width: 1100px;
+  --max-width:1100px;
+  /* Troca aqui para usar a fachada: ex: url('fachada.jpg') */
+  --fachada: url('fachada.jpg');
 }
 
 /* reset */
-* { box-sizing: border-box; margin:0; padding:0; }
-html,body { height:100%; }
-
-/* BACKGROUND: fachada com overlay (não atrapalha contraste) */
-body {
-  font-family:"Segoe UI", Arial, sans-serif;
-  color: var(--branco);
-  background-color: var(--azul);
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Segoe UI",Arial,sans-serif;
+  color:var(--branco);
   background-image: linear-gradient(180deg, rgba(11,22,90,0.55), rgba(6,9,34,0.82)), var(--fachada);
   background-blend-mode: overlay;
   background-size: cover;
   background-position: center top;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
-  padding-top:86px; /* espaço pro header fixo */
+  padding-top:86px;
 }
 
-/* subtle vignette to keep text readable on any fachada */
-body::after{
-  content:"";
-  position:fixed; inset:0; pointer-events:none;
+/* subtle vignette */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;
   background: radial-gradient(ellipse at center, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.28) 65%, rgba(0,0,0,0.55) 100%);
-  z-index:0;
-}
+  z-index:0}
 
-/* INTRO overlay (kept behavior) */
-#intro {
-  position: fixed; top:0; left:0; width:100%; height:100vh;
+/* intro */
+#intro{position:fixed;top:0;left:0;width:100%;height:100vh;
   background: radial-gradient(circle, rgba(27,47,145,0.98), rgba(6,9,34,0.95));
-  display:flex; justify-content:center; align-items:center; flex-direction:column;
-  z-index:50; animation: fadeOutIntro 1s ease 3.5s forwards;
-}
-#intro img { width:200px; animation: logoGrow 3s ease forwards; }
+  display:flex;justify-content:center;align-items:center;flex-direction:column;
+  z-index:50;animation:fadeOutIntro 1s ease 3.5s forwards}
+#intro img{width:200px;animation:logoGrow 3s ease forwards}
 
-/* header fixed */
-header {
-  position: fixed; top:0; left:0; width:100%; height:76px;
-  display:flex; align-items:center; justify-content:center;
+/* header */
+header{
+  position:fixed;top:0;left:0;width:100%;height:76px;
+  display:flex;align-items:center;justify-content:center;
   background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
-  backdrop-filter: blur(6px);
-  z-index:45;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-  padding: 8px 16px;
+  backdrop-filter: blur(6px);z-index:45;padding:8px 16px;box-shadow:0 6px 18px rgba(0,0,0,0.18)
 }
-header img { height:56px; transition: transform 0.25s ease; }
-header img:hover { transform: scale(1.03); }
+header img{height:56px;transition:transform .25s}
+header img:hover{transform:scale(1.03)}
 
-/* central layout wrapper */
-.wrapper {
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  width:100%;
-  padding:28px 18px 80px 18px;
-  z-index:10; /* above body background but below intro/header */
-}
-
-/* card (main portal) */
-.card {
-  width:100%;
-  max-width:var(--max-width);
-  border-radius:18px;
+/* wrapper + card */
+.wrapper{display:flex;justify-content:center;align-items:flex-start;width:100%;padding:28px 18px 80px 18px;z-index:10}
+.card{
+  width:100%;max-width:var(--max-width);border-radius:18px;
   background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-  box-shadow: 0 20px 60px rgba(4,9,30,0.6);
-  padding:28px;
-  margin:8px;
-  color:var(--branco);
-  z-index:12;
-  overflow:hidden;
-  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 20px 60px rgba(4,9,30,0.6); padding:28px;margin:8px;color:var(--branco);z-index:12;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.04)
 }
 
-/* top row */
-.header-row {
-  display:flex;
-  align-items:center;
-  gap:18px;
-  margin-bottom:12px;
-}
-.header-row img.logo {
-  width:72px; height:72px; object-fit:contain;
-  border-radius:10px;
-  background: rgba(255,255,255,0.04);
-  padding:8px;
-}
-.title-block { flex:1; text-align:left; }
-.title-block h1 { font-size:1.6rem; margin-bottom:4px; letter-spacing:0.2px; }
-.title-block p { margin:0; color: rgba(255,255,255,0.9); font-size:0.95rem; }
+/* header row inside card */
+.header-row{display:flex;align-items:center;gap:18px;margin-bottom:12px}
+.header-row img.logo{width:72px;height:72px;object-fit:contain;border-radius:10px;background:rgba(255,255,255,0.04);padding:8px}
+.title-block{flex:1;text-align:left}
+.title-block h1{font-size:1.6rem;margin-bottom:4px}
+.title-block p{margin:0;color:rgba(255,255,255,0.9);font-size:0.95rem}
 
 /* sections grid */
-.sections {
-  display:grid;
-  grid-template-columns: 1fr 380px;
-  gap:18px;
-  margin-top:10px;
-  align-items:start;
-}
-.left-column { display:flex; flex-direction:column; gap:18px; }
-.right-column { display:flex; flex-direction:column; gap:18px; }
+.sections{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:10px;align-items:start}
+.left-column{display:flex;flex-direction:column;gap:18px}
+.right-column{display:flex;flex-direction:column;gap:18px}
+.section{background:var(--card);border-radius:12px;padding:18px;min-width:0;border:1px solid rgba(255,255,255,0.03)}
+.section h2{font-size:1.05rem;margin:0 0 12px 0;display:flex;align-items:center;gap:10px;color:var(--branco)}
+.section .desc{color:rgba(255,255,255,0.85);font-size:0.92rem;margin-bottom:12px}
 
-/* section cards */
-.section {
-  background: var(--card);
-  border-radius:12px;
-  padding:18px;
-  min-width:0;
-  border: 1px solid rgba(255,255,255,0.03);
-}
-.section h2 {
-  font-size:1.05rem;
-  margin:0 0 12px 0;
-  display:flex; align-items:center; gap:10px;
-  color:var(--branco);
-}
-.section .desc { color:rgba(255,255,255,0.85); font-size:0.92rem; margin-bottom:12px; }
+/* buttons */
+.btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.app-btn{background:var(--branco);color:var(--azul);border:none;border-radius:10px;padding:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 12px 30px rgba(3,9,40,0.25);transition:transform .18s,background .18s,color .18s}
+.app-btn .emoji{margin-right:8px;font-size:1.05rem}
+.app-btn .tag{background:var(--azul);color:var(--branco);padding:6px 10px;border-radius:8px;font-size:.75rem;font-weight:700}
+.app-btn:hover{transform:translateY(-4px);background:var(--vermelho);color:var(--branco)}
+.app-btn:hover .tag{background:rgba(255,255,255,0.15);color:var(--branco)}
 
-/* grid of buttons */
-.btn-grid {
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:12px;
-}
-.app-btn {
-  background:var(--branco);
-  color:var(--azul);
-  border:none;
-  border-radius:10px;
-  padding:12px 12px;
-  font-weight:700;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  box-shadow:0 12px 30px rgba(3,9,40,0.25);
-  transition: transform .18s ease, background .18s ease, color .18s ease;
-}
-.app-btn span.emoji { margin-right:8px; font-size:1.05rem; }
-.app-btn .tag {
-  background:var(--azul);
-  color:var(--branco);
-  padding:6px 10px;
-  border-radius:8px;
-  font-size:0.75rem;
-  font-weight:700;
-}
-.app-btn:hover { transform:translateY(-4px); background:var(--vermelho); color:var(--branco); }
-.app-btn:hover .tag { background: rgba(255,255,255,0.15); color: var(--branco); }
+/* footer */
+.card-footer{margin-top:18px;text-align:center;color:rgba(255,255,255,0.75);font-size:0.9rem}
 
-/* footer area */
-.card-footer {
-  margin-top:18px;
-  text-align:center;
-  color:rgba(255,255,255,0.75);
-  font-size:0.9rem;
-}
+/* form overlays */
+.form-container{display:none;position:fixed;inset:0;z-index:60;background:linear-gradient(180deg, rgba(6,9,34,0.6), rgba(6,9,34,0.88));padding:24px;overflow:auto;align-items:center;justify-content:center}
+.panel{width:100%;max-width:920px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:12px;padding:20px;margin:12px auto;color:var(--branco);box-shadow:0 18px 50px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.04)}
 
-/* form-container overlays (antes não tinha estilo: agora responsivo e amigável) */
-.form-container {
-  display:none; /* shown/hidden by JS */
-  position:fixed; inset:0;
-  z-index:60;
-  background: linear-gradient(180deg, rgba(6,9,34,0.6), rgba(6,9,34,0.88));
-  padding:24px;
-  overflow:auto;
-  align-items:center;
-  justify-content:center;
-}
+/* forms */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;align-items:start}
+.form-grid .full{grid-column:1/-1}
+.form-grid label{display:block;margin-bottom:6px;font-size:.88rem;color:rgba(255,255,255,0.92)}
+.form-grid input[type="text"],.form-grid input[type="date"],.form-grid input[type="time"],.form-grid input[type="password"],.form-grid select,.form-grid textarea{width:100%;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:var(--branco);font-size:.95rem}
+.form-grid textarea{min-height:88px;resize:vertical}
 
-/* panel style (reaproveitado para formulários) */
-.panel {
-  width:100%;
-  max-width:920px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-  border-radius:12px;
-  padding:20px;
-  margin:12px auto;
-  color:var(--branco);
-  box-shadow: 0 18px 50px rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.04);
-}
+/* buttons styles */
+button[type="submit"],#btnMakePDF,#btnGenQR,#btnDownloadQR,.voltar-btn,#btnValidarSenha{background:linear-gradient(90deg,var(--azul),#122069);color:var(--branco);border:none;padding:10px 14px;border-radius:10px;font-weight:700;transition:transform .14s,opacity .12s;box-shadow:0 10px 26px rgba(18,32,102,0.3)}
+button[type="submit"]:hover,.voltar-btn:hover,#btnMakePDF:hover{transform:translateY(-3px);opacity:.95}
 
-/* forms: grid and inputs */
-.form-grid {
-  display:grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap:12px;
-  align-items:start;
-}
-.form-grid .full { grid-column: 1 / -1; }
-.form-grid label { display:block; margin-bottom:6px; font-size:0.88rem; color:rgba(255,255,255,0.92); }
-.form-grid input[type="text"], .form-grid input[type="date"], .form-grid input[type="time"], .form-grid input[type="password"], .form-grid select, .form-grid textarea {
-  width:100%; padding:10px 12px; border-radius:8px;
-  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
-  color:var(--branco); font-size:0.95rem;
-}
-.form-grid textarea { min-height:88px; resize:vertical; }
+/* small utils */
+.hidden{display:none!important}
+.center{text-align:center}
+.panel h2{margin-bottom:8px}
 
-/* form buttons */
-button[type="submit"], .voltar-btn, .app-btn {
-  cursor:pointer;
-}
-button[type="submit"], #btnMakePDF, #btnGenQR, #btnDownloadQR, .voltar-btn, #btnValidarSenha {
-  background: linear-gradient(90deg, var(--azul), #122069);
-  color:var(--branco);
-  border:none; padding:10px 14px; border-radius:10px; font-weight:700;
-  transition: transform .14s ease, opacity .12s ease;
-  box-shadow: 0 10px 26px rgba(18,32,102,0.3);
-}
-button[type="submit"]:hover, .voltar-btn:hover, #btnMakePDF:hover { transform: translateY(-3px); opacity:0.95; }
+/* scanner */
+#video{width:100%;max-height:420px;border-radius:10px;background:rgba(0,0,0,0.45);object-fit:cover}
+.scanner-buttons{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#history{margin-top:10px;list-style:none;max-height:160px;overflow:auto;padding:6px;border-radius:8px;background:rgba(0,0,0,0.25)}
+#history li{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.03);font-size:.95rem}
 
-/* small util classes */
-.hidden { display:none !important; }
-.center { text-align:center; }
-.panel h2 { margin-bottom:8px; }
+/* qr preview */
+.qr-preview{display:flex;justify-content:center;align-items:center;gap:12px}
+.qr-card{background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;display:flex;flex-direction:column;align-items:center}
 
-/* scanner styles */
-#video { width:100%; max-height:420px; border-radius:10px; background:rgba(0,0,0,0.45); object-fit:cover; }
-.scanner-buttons { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
-#history { margin-top:10px; list-style:none; max-height:160px; overflow:auto; padding:6px; border-radius:8px; background: rgba(0,0,0,0.25); }
-#history li { padding:8px 10px; border-bottom:1px solid rgba(255,255,255,0.03); font-size:0.95rem; }
-
-/* QR preview */
-.qr-preview { display:flex; justify-content:center; align-items:center; gap:12px; }
-.qr-card { background: rgba(255,255,255,0.02); padding:12px; border-radius:8px; display:flex; flex-direction:column; align-items:center; }
-
-/* thumbs for pdf */
-.thumbs { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
-.thumb { position:relative; width:120px; height:90px; border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.04); background:rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; }
-.thumb img { width:100%; height:100%; object-fit:cover; display:block; }
-.thumb .remove { position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.45); padding:4px 7px; border-radius:6px; cursor:pointer; font-weight:700; }
+/* thumbs */
+.thumbs{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.thumb{position:relative;width:120px;height:90px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb .remove{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.45);padding:4px 7px;border-radius:6px;cursor:pointer;font-weight:700}
 
 /* responsive */
-@media (max-width:1100px){
-  :root{ --max-width:980px; }
-  .sections { grid-template-columns: 1fr 320px; }
-}
-@media (max-width:900px){
-  body { padding-top:86px; }
-  .sections { grid-template-columns: 1fr; }
-  .right-column { order:2; }
-  .btn-grid { grid-template-columns:1fr 1fr; }
-  .card { padding:18px; }
-  .form-grid { grid-template-columns: 1fr; }
-}
-@media (max-width:560px){
-  header img { height:44px; }
-  .header-row img.logo { width:56px; height:56px; }
-  .title-block h1 { font-size:1.2rem; text-align:center; }
-  .header-row { gap:12px; align-items:center; }
-  .btn-grid { grid-template-columns:1fr; }
-  .panel { padding:14px; margin:8px; }
-  .thumb { width:96px; height:72px; }
-}
+@media(max-width:1100px){:root{--max-width:980px}.sections{grid-template-columns:1fr 320px}}
+@media(max-width:900px){body{padding-top:86px}.sections{grid-template-columns:1fr}.right-column{order:2}.btn-grid{grid-template-columns:1fr 1fr}.card{padding:18px}.form-grid{grid-template-columns:1fr}}
+@media(max-width:560px){header img{height:44px}.header-row img.logo{width:56px;height:56px}.title-block h1{font-size:1.2rem;text-align:center}.header-row{gap:12px;align-items:center}.btn-grid{grid-template-columns:1fr}.panel{padding:14px;margin:8px}.thumb{width:96px;height:72px}}
 
-/* small animations */
-@keyframes logoGrow { 0%{transform:scale(0.5);opacity:0;}50%{transform:scale(0.8);opacity:0.7;}100%{transform:scale(1);opacity:1;} }
-@keyframes fadeOutIntro { to{opacity:0;visibility:hidden;} }
+/* animations */
+@keyframes logoGrow{0%{transform:scale(.5);opacity:0}50%{transform:scale(.8);opacity:.7}100%{transform:scale(1);opacity:1}}
+@keyframes fadeOutIntro{to{opacity:0;visibility:hidden}}
 
-/* ensure interactive elements are readable on bright facade */
-input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.5); }
+/* placeholders */
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.5)}
 </style>
 </head>
 <body>
 
-<!-- INTRO & HEADER -->
+<!-- Intro & Header -->
 <div id="intro"><img src="logobranca.png" alt="Logo Esquadromil"></div>
 <header><img src="logocolorida.png" alt="Logo Esquadromil"></header>
 
+<!-- Main Card -->
 <div class="wrapper">
   <div class="card">
-
     <div class="header-row">
       <img class="logo" src="logobranca.png" alt="Esquadromil">
       <div class="title-block">
@@ -301,22 +154,21 @@ input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.5); }
     </div>
 
     <div class="sections">
-      <!-- LEFT: principais blocos (Sistemas, Aplicações) -->
+      <!-- LEFT -->
       <div class="left-column">
         <div class="section" id="sistemasSection">
           <h2>🔧 Sistemas</h2>
-          <div class="desc">Acesse os sistemas internos da empresa.</div>
+          <div class="desc">Formulários e controle operacional.</div>
           <div class="btn-grid">
             <button class="app-btn" id="btnChamado"><span class="emoji">💻</span><span style="flex:1;text-align:left">Chamado TI</span><div class="tag">Chamado</div></button>
             <button class="app-btn" id="btnGuarita"><span class="emoji">🛡️</span><span style="flex:1;text-align:left">Agendamento Guarita</span><div class="tag">Guarita</div></button>
-            <!-- ocupam a largura total em mobile -->
-            <button class="app-btn" id="btnScanner" style="grid-column:1/-1"><span class="emoji">📷</span><span style="flex:1;text-align:left">Scanner QR (Acesso por senha)</span><div class="tag">Scanner</div></button>
+            <button class="app-btn" id="btnScanner" style="grid-column:1/-1"><span class="emoji">📷</span><span style="flex:1;text-align:left">Scanner QR (bloqueado por senha)</span><div class="tag">Scanner</div></button>
           </div>
         </div>
 
         <div class="section" id="aplicacoesSection">
           <h2>🧩 Aplicações</h2>
-          <div class="desc">Ferramentas e utilitários rápidos para o dia a dia.</div>
+          <div class="desc">Ferramentas utilitárias.</div>
           <div class="btn-grid">
             <button class="app-btn" id="btnQRGen"><span class="emoji">🔖</span><span style="flex:1;text-align:left">Gerador QR</span><div class="tag">QR</div></button>
             <button class="app-btn" id="btnPDF" style="grid-column:1/-1"><span class="emoji">📄</span><span style="flex:1;text-align:left">Digitalizar → PDF</span><div class="tag">PDF</div></button>
@@ -324,34 +176,31 @@ input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.5); }
         </div>
       </div>
 
-      <!-- RIGHT: utilitários rápidos / status -->
+      <!-- RIGHT -->
       <div class="right-column">
-        <div class="section">
-          <h2>📌 Atalhos Rápidos</h2>
-          <div class="desc">Acesso direto aos serviços mais usados.</div>
-          <ul style="list-style:none;padding-left:0;margin:0;">
-            <li style="padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03);">🔔 Status do sistema — <strong>OK</strong></li>
-            <li style="padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03);">📁 Central de Documentos</li>
-            <li style="padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03);">📞 Contato TI: ramal 123</li>
-          </ul>
-        </div>
-
+        <!-- Removed "Atalhos Rápidos" as requested -->
         <div class="section">
           <h2>🗓 Próximos Agendamentos</h2>
           <div class="desc">Visão rápida dos próximos eventos na guarita.</div>
-          <div style="min-height:80px; display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.82)">Nenhum agendamento para hoje.</div>
+          <div style="min-height:80px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.82)">Nenhum agendamento para hoje.</div>
+        </div>
+
+        <div class="section">
+          <h2>📎 Recursos</h2>
+          <div class="desc">Links úteis (opcional).</div>
+          <ul style="list-style:none;padding-left:0;margin:0;color:rgba(255,255,255,0.9)">
+            <li style="padding:6px 0">📁 Manual interno</li>
+            <li style="padding:6px 0">🔐 Políticas</li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <div class="card-footer">
-      © 2025 Esquadromil — Mantido o funcionamento original dos sistemas.
-    </div>
-
+    <div class="card-footer">© 2025 Esquadromil — Mantido o funcionamento original dos sistemas.</div>
   </div>
 </div>
 
-<!-- === START OF ORIGINAL FORMS & PANELS (mantive IDs / campos / scripts) === -->
+<!-- === FORMS & MODALS (integrations preserved) === -->
 
 <!-- CHAMADO TI -->
 <div id="formChamado" class="form-container">
@@ -359,9 +208,7 @@ input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.5); }
     <form id="form">
       <h2>TI - Abertura de Chamados</h2>
       <div class="form-grid">
-        <div>
-          <label for="nome">Nome:</label><input type="text" name="nome" id="nome" required/>
-        </div>
+        <div><label for="nome">Nome:</label><input type="text" name="nome" id="nome" required/></div>
         <div>
           <label for="setor">Setor:</label>
           <select name="setor" id="setor" required>
@@ -371,6 +218,7 @@ input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.5); }
             <option>Marketing</option><option>Diretoria</option>
           </select>
         </div>
+
         <div class="full">
           <label for="problema">Tipo de Problema:</label>
           <select name="problema" id="problema" required>
@@ -381,9 +229,11 @@ input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.5); }
             <option>Troca Toner Impressora</option><option>Solicitar Periféricos (fones,mouse)</option><option>Outros</option>
           </select>
         </div>
+
         <div id="outro-problema" class="hidden full">
           <label for="outro">Descreva o problema:</label><textarea name="outro" id="outro" rows="4"></textarea>
         </div>
+
         <div>
           <label for="urgencia">Urgência:</label>
           <select name="urgencia" id="urgencia" required>
@@ -482,7 +332,7 @@ input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.5); }
         <div class="qr-preview">
           <div class="qr-card">
             <div id="qrcode"></div>
-            <div style="font-size:12px; color:rgba(255,255,255,0.8)">Preview</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.8)">Preview</div>
           </div>
         </div>
 
@@ -500,7 +350,7 @@ input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.5); }
 <div id="pdfScanner" class="form-container">
   <div class="panel">
     <h2>📄 Digitalizar Imagens → PDF</h2>
-    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
       <div>
         <label for="fileInput">Escolher imagens (várias):</label>
         <input type="file" id="fileInput" accept="image/*" multiple />
@@ -517,27 +367,26 @@ input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.5); }
 
     <div class="thumbs" id="thumbs"></div>
 
-    <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
       <button id="btnMakePDF">Gerar PDF</button>
       <button id="btnClearThumbs" class="secondary">Limpar imagens</button>
       <button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
     </div>
-    <div id="pdfMsg" style="margin-top:10px;font-weight:700;"></div>
+    <div id="pdfMsg" style="margin-top:10px;font-weight:700"></div>
   </div>
 </div>
 
-<!-- EXTERNAL LIBRARIES (mantidos) -->
+<!-- External libs kept -->
 <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.18.6/umd/index.min.js"></script>
 <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- MAIN SCRIPT (mantive seu código inalterado; pequenas ligações DOM já contempladas pelos novos estilos) -->
+<!-- MAIN SCRIPT: integrações preservadas e adaptadas ao novo layout -->
 <script>
 /* -------------------------
-   Tela / navegação
+   Navegação entre painéis
    ------------------------- */
-const menu = document.getElementById('menu'); /* (not used visually now) */
 const formChamado = document.getElementById('formChamado');
 const formGuarita = document.getElementById('formGuarita');
 const senhaContainer = document.getElementById('senhaContainer');
@@ -553,11 +402,9 @@ document.getElementById('btnPDF').onclick = ()=>{ hideAll(); pdfScanner.style.di
 
 function hideAll(){
   [formChamado,formGuarita,senhaContainer,scannerContainer,qrGenerator,pdfScanner].forEach(el=>el.style.display='none');
-  // keep main card visible; nothing else to hide
 }
 function voltarMenu(){
   [formChamado,formGuarita,senhaContainer,scannerContainer,qrGenerator,pdfScanner].forEach(el=>el.style.display='none');
-  // scroll back to top of card for user clarity
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -576,15 +423,21 @@ document.getElementById('btnValidarSenha').onclick = ()=>{
 };
 
 /* -------------------------
-   Chamado & Guarita (mantidos)
+   Chamado & Guarita
    ------------------------- */
+/* Apps Script endpoints (mantidos conforme teu código original) */
 const scriptChamado = 'https://script.google.com/macros/s/AKfycbw8bt5spo8b1Ve77XhYHC0N9jiMH6c-je-84C1zvsld1gHCcpUxAm-K9I1ySlW4huiJ/exec';
+const scriptGuarita = 'https://script.google.com/macros/s/AKfycbwsLgZxTwI4jod2SlL6IU1xZmYYj5hWy0-X_1Wki9GeNGlW40x8Bv5bbADRkjOiqHaM/exec';
+
 const form = document.getElementById('form');
 const outroInput = document.getElementById('outro-problema');
 const problemaSelect = document.getElementById('problema');
 const mensagem = document.getElementById('mensagem');
+
 const tempos = {"Falha de impressão":"10 minutos","Impressora travada":"10 minutos","Abertura de tabela de preço":"10 minutos","Precificação de produtos":"20 minutos","Computador travando/lento":"20 minutos","Problemas de rede":"20 minutos","Sistema indisponível":"30 minutos","Cadastro RCA":"20 minutos","Erro Transmissão NFE":"30 minutos","Troca Toner Impressora":"15 minutos","Solicitar Periféricos (fones,mouse)":"15 minutos","Outros":"15 minutos"};
+
 problemaSelect.addEventListener('change', ()=>{ outroInput.classList.toggle('hidden', problemaSelect.value !== 'Outros'); });
+
 form.addEventListener('submit', e=>{
   e.preventDefault();
   const data = new FormData(form);
@@ -598,9 +451,9 @@ form.addEventListener('submit', e=>{
     .finally(()=>{ form.reset(); outroInput.classList.add("hidden"); setTimeout(()=>mensagem.style.opacity=0,5000); });
 });
 
-const scriptGuarita = 'https://script.google.com/macros/s/AKfycbwsLgZxTwI4jod2SlL6IU1xZmYYj5hWy0-X_1Wki9GeNGlW40x8Bv5bbADRkjOiqHaM/exec';
 const formG = document.getElementById('formGuaritaForm');
 const mensagemG = document.getElementById('mensagemGuarita');
+
 formG.addEventListener('submit', e=>{
   e.preventDefault();
   const data = new FormData(formG);
@@ -614,7 +467,7 @@ formG.addEventListener('submit', e=>{
 });
 
 /* -------------------------
-   SCANNER
+   SCANNER (ZXing)
    ------------------------- */
 const video = document.getElementById('video');
 const historyList = document.getElementById('history');
@@ -626,6 +479,7 @@ const clearBtn = document.getElementById('clearBtn');
 const codeReader = new ZXing.BrowserQRCodeReader();
 let currentStream = null;
 let scannedData = JSON.parse(localStorage.getItem('scannedCodes') || '[]');
+
 function updateHistoryList(){
   historyList.innerHTML = '';
   scannedData.slice().reverse().forEach(item=>{
@@ -650,7 +504,7 @@ startBtn.onclick = async ()=>{
         if(!scannedData.includes(text)){
           scannedData.push(text);
           updateHistoryList();
-          try { navigator.vibrate && navigator.vibrate(200); } catch(e){}
+          try{ navigator.vibrate && navigator.vibrate(200); }catch(e){}
         }
       }
     });
@@ -672,14 +526,14 @@ exportBtn.onclick = ()=>{
 };
 
 /* -------------------------
-   QR GENERATOR
+   QR GENERATOR (QRCode.js)
    ------------------------- */
 let qrInstance = null;
 function renderEmptyQR(){
   const qdiv = document.getElementById('qrcode');
   if(!qdiv) return;
   qdiv.innerHTML = '';
-  qrInstance = new QRCode(qdiv, { text: "https://esquadromil.com", width: 240, height: 240, colorDark: "#000000", colorLight:"#ffffff", correctLevel: QRCode.CorrectLevel.H });
+  qrInstance = new QRCode(qdiv, { text: "https://esquadromil.com", width:240, height:240, colorDark:"#000000", colorLight:"#ffffff", correctLevel: QRCode.CorrectLevel.H });
 }
 renderEmptyQR();
 
@@ -711,12 +565,12 @@ document.getElementById('btnDownloadQR').onclick = ()=>{
   else { dataUrl = qdiv.toDataURL('image/png'); }
   const a = document.createElement('a');
   a.href = dataUrl;
-  a.download = (document.getElementById('qrText').value || 'qrcode') .replace(/\s+/g,'_') + '.png';
+  a.download = (document.getElementById('qrText').value || 'qrcode').replace(/\s+/g,'_') + '.png';
   document.body.appendChild(a); a.click(); a.remove();
 };
 
 /* -------------------------
-   IMAGE -> PDF
+   IMAGE -> PDF (jsPDF)
    ------------------------- */
 const fileInput = document.getElementById('fileInput');
 const cameraCapture = document.getElementById('cameraCapture');
@@ -726,46 +580,33 @@ const btnClearThumbs = document.getElementById('btnClearThumbs');
 const pdfName = document.getElementById('pdfName');
 const pdfMsg = document.getElementById('pdfMsg');
 
-let imagesForPdf = []; // {file, dataURL, orientation}
+let imagesForPdf = [];
 
 function addImageFile(file){
   const reader = new FileReader();
   reader.onload = (e)=>{
     const dataURL = e.target.result;
-    const div = document.createElement('div'); div.className = 'thumb';
+    const div = document.createElement('div'); div.className='thumb';
     const img = document.createElement('img'); img.src = dataURL;
     const rem = document.createElement('div'); rem.className='remove'; rem.textContent='✕';
     rem.onclick = ()=>{ thumbs.removeChild(div); imagesForPdf = imagesForPdf.filter(it=>it.dataURL !== dataURL); updatePdfMsg(); };
     div.appendChild(img); div.appendChild(rem);
     thumbs.appendChild(div);
-    imagesForPdf.push({ file, dataURL });
+    imagesForPdf.push({file,dataURL});
     updatePdfMsg();
   };
   reader.readAsDataURL(file);
 }
 
-fileInput.addEventListener('change', (e)=> {
-  const files = Array.from(e.target.files || []);
-  files.forEach(f=> addImageFile(f));
-  fileInput.value = '';
-});
-cameraCapture.addEventListener('change', (e)=> {
-  const files = Array.from(e.target.files || []);
-  files.forEach(f=> addImageFile(f));
-  cameraCapture.value = '';
-});
+fileInput.addEventListener('change',(e)=>{Array.from(e.target.files||[]).forEach(f=>addImageFile(f));fileInput.value='';});
+cameraCapture.addEventListener('change',(e)=>{Array.from(e.target.files||[]).forEach(f=>addImageFile(f));cameraCapture.value='';});
 
-btnClearThumbs.onclick = ()=> {
-  if(confirm('Remover todas as imagens?')){ imagesForPdf = []; thumbs.innerHTML=''; updatePdfMsg(); }
-};
+btnClearThumbs.onclick = ()=>{ if(confirm('Remover todas as imagens?')){ imagesForPdf=[]; thumbs.innerHTML=''; updatePdfMsg(); } };
 
-function updatePdfMsg(){
-  pdfMsg.textContent = imagesForPdf.length ? `${imagesForPdf.length} imagem(ns) prontas.` : 'Nenhuma imagem selecionada.';
-}
+function updatePdfMsg(){ pdfMsg.textContent = imagesForPdf.length ? `${imagesForPdf.length} imagem(ns) prontas.` : 'Nenhuma imagem selecionada.'; }
 
-/* generate PDF using jsPDF */
 btnMakePDF.onclick = async ()=>{
-  if(imagesForPdf.length === 0){ alert('Selecione ao menos uma imagem.'); return; }
+  if(imagesForPdf.length===0){ alert('Selecione ao menos uma imagem.'); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit:'px', format:'a4' });
   const pageW = doc.internal.pageSize.getWidth();
@@ -774,31 +615,28 @@ btnMakePDF.onclick = async ()=>{
   pdfMsg.textContent = '⏳ Gerando PDF...';
   for(let i=0;i<imagesForPdf.length;i++){
     const it = imagesForPdf[i];
-    await new Promise((res, rej)=>{
+    await new Promise((res,rej)=>{
       const img = new Image();
       img.onload = ()=>{
         const margin = 20;
-        let iw = img.width;
-        let ih = img.height;
+        let iw = img.width, ih = img.height;
         const ratio = Math.min((pageW - margin*2)/iw, (pageH - margin*2)/ih, 1);
-        const dw = iw * ratio;
-        const dh = ih * ratio;
-        const x = (pageW - dw)/2;
-        const y = (pageH - dh)/2;
-        doc.addImage(img, 'JPEG', x, y, dw, dh);
-        if(i < imagesForPdf.length - 1) doc.addPage();
+        const dw = iw * ratio, dh = ih * ratio;
+        const x = (pageW - dw)/2, y = (pageH - dh)/2;
+        doc.addImage(img,'JPEG',x,y,dw,dh);
+        if(i < imagesForPdf.length -1) doc.addPage();
         res();
       };
-      img.onerror = (err)=>{ console.error('img load err', err); res(); };
+      img.onerror = ()=>{ console.error('img load err'); res(); };
       img.src = it.dataURL;
     });
   }
-  const filename = (pdfName.value.trim() || 'documento') .replace(/[^\w\-_.]/g,'_') + '.pdf';
+  const filename = (pdfName.value.trim() || 'documento').replace(/[^\w\-_.]/g,'_') + '.pdf';
   doc.save(filename);
   pdfMsg.textContent = '✅ PDF gerado e baixado: ' + filename;
 };
 
-/* init small things */
+/* init */
 updatePdfMsg();
 renderEmptyQR();
 </script>
