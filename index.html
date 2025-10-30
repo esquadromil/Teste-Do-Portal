@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portal Esquadromil</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- bibliotecas -->
+  <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.18.6/umd/index.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Intro / Header (mantive o seu original) -->
+  <div id="intro">
+    <img src="logobranca.png" alt="Logo Esquadromil">
+  </div>
+
+  <header>
+    <img src="logocolorida.png" alt="Logo Esquadromil">
+  </header>
+
+  <!-- Menu principal -->
+  <div id="menu">
+    <h1>Portal Esquadromil</h1>
+    <p class="slogan">Sistema de suporte e comunicação — tecnologia que conecta</p>
+
+    <!-- botões originais -->
+    <div class="menu-grid">
+      <button class="menu-btn" id="btnChamado">💻 Chamado TI</button>
+      <button class="menu-btn" id="btnGuarita">🛡️ Agendamento Guarita</button>
+
+      <!-- novos botões -->
+      <button class="menu-btn" id="btnAplicacoes">⚙️ Aplicações</button>
+      <button class="menu-btn" id="btnSistemas">🔐 Sistemas</button>
+      <button class="menu-btn" id="btnLinks">📂 Links & Arquivos</button>
+    </div>
+  </div>
+
+  <!-- Banner de atualização -->
+  <div id="updateBanner" class="update-banner hidden">
+    <strong id="updateText">Atualização programada em 01/01/2026 às 18:00 — atualize a página após esse horário.</strong>
+    <button class="small" id="dismissBanner">Fechar</button>
+  </div>
+
+  <!-- FORM CHAMADO TI (mantido 1:1 funcional) -->
+  <div id="formChamado" class="form-container hidden">
+    <form id="form">
+      <h1>TI - Abertura de Chamados</h1>
+      <!-- ... (mesmo conteúdo do seu form original) -->
+      <label for="nome">Nome:</label><input type="text" name="nome" id="nome" required/>
+      <label for="setor">Setor:</label>
+      <select name="setor" id="setor" required>
+        <option value="">Selecione</option>
+        <option>TI</option><option>Produção</option><option>Financeiro</option>
+        <option>Processos</option><option>Compras</option><option>RH</option>
+        <option>DP</option><option>Contabilidade</option><option>Comercial</option>
+        <option>Televendas</option><option>Logística</option><option>Marketing</option>
+        <option>Diretoria</option>
+      </select>
+
+      <label for="problema">Tipo de Problema:</label>
+      <select name="problema" id="problema" required>
+        <option value="">Selecione</option>
+        <option>Falha de impressão</option>
+        <option>Impressora travada</option>
+        <option>Abertura de tabela de preço</option>
+        <option>Precificação de produtos</option>
+        <option>Computador travando/lento</option>
+        <option>Problemas de rede</option>
+        <option>Sistema indisponível</option>
+        <option>Cadastro RCA</option>
+        <option>Erro Transmissão NFE</option>
+        <option>Troca Toner Impressora</option>
+        <option>Solicitar Periféricos (fones,mouse)</option>
+        <option>Outros</option>
+      </select>
+
+      <div id="outro-problema" class="hidden">
+        <label for="outro">Descreva o problema:</label>
+        <textarea name="outro" id="outro" rows="4"></textarea>
+      </div>
+
+      <label for="urgencia">Urgência:</label>
+      <select name="urgencia" id="urgencia" required>
+        <option value="">Selecione</option><option>Baixa</option><option>Média</option><option>Alta</option>
+      </select>
+
+      <button type="submit">Enviar Chamado</button>
+      <div id="mensagem"></div>
+    </form>
+    <button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
+  </div>
+
+  <!-- FORM GUARITA (mantido 1:1 funcional) -->
+  <div id="formGuarita" class="form-container hidden">
+    <form id="formGuaritaForm">
+      <h1>Agendamento Guarita</h1>
+      <label for="nomeG">Nome:</label><input type="text" name="nomeG" id="nomeG" required/>
+      <label for="setorG">Setor:</label><input type="text" name="setorG" id="setorG" required/>
+      <label for="visitante">Visitante:</label><input type="text" name="visitante" id="visitante" required/>
+      <label for="motivo">Motivo:</label><input type="text" name="motivo" id="motivo" required/>
+      <label for="data">Data:</label><input type="date" name="data" id="data" required/>
+      <label for="hora">Hora:</label><input type="time" name="hora" id="hora" required/>
+      <label for="obs">Observações:</label><textarea name="obs" id="obs" rows="3"></textarea>
+      <button type="submit">Enviar Agendamento</button>
+      <div id="mensagemGuarita"></div>
+    </form>
+    <button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
+  </div>
+
+  <!-- APLICACOES: QR GENERATOR + DIGITALIZADOR -->
+  <div id="aplicacoes" class="form-container hidden">
+    <h1>Aplicações</h1>
+
+    <section class="card">
+      <h2>Gerador de QR Code</h2>
+      <label for="qrText">Texto/URL:</label>
+      <input id="qrText" placeholder="Digite texto ou URL" />
+      <label for="qrFileName">Nome do arquivo (sem extensão):</label>
+      <input id="qrFileName" placeholder="ex: etiqueta_produto_001" />
+      <label for="qrLogo">Logo overlay (usar arquivo: <em>logo_generic.png</em>)</label>
+      <input type="file" id="qrLogo" accept="image/*" />
+      <div class="row">
+        <button id="genQR">Gerar QR</button>
+        <button id="downloadQR">Baixar PNG</button>
+      </div>
+      <div id="qrPreview" class="qr-preview"></div>
+    </section>
+
+    <section class="card">
+      <h2>Digitalizador → Exportar PDF</h2>
+      <video id="scanVideo" playsinline></video>
+      <div class="row">
+        <button id="startScan">Iniciar Câmera</button>
+        <button id="stopScan">Parar Câmera</button>
+        <button id="captureBtn">Capturar</button>
+      </div>
+
+      <label for="pdfName">Nome do PDF (sem extensão):</label>
+      <input id="pdfName" placeholder="ex: documento_entrada_01" />
+      <div id="captures" class="captures"></div>
+      <div class="row">
+        <button id="exportPDF">Exportar PDF</button>
+        <button id="clearCaptures">Limpar Capturas</button>
+      </div>
+    </section>
+
+    <button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
+  </div>
+
+  <!-- SISTEMAS (protegido por senha) -->
+  <div id="sistemas" class="form-container hidden">
+    <h1>Sistemas (Acesso Protegido)</h1>
+
+    <div id="sistemaLocked">
+      <label for="sistemaPass">Digite a senha para acessar: </label>
+      <input id="sistemaPass" type="password" placeholder="Senha..." />
+      <div class="row">
+        <button id="unlockSistema">Desbloquear</button>
+        <button id="cancelUnlock" class="small">Cancelar</button>
+      </div>
+      <p class="help">Senha fornecida pelo administrador.</p>
+    </div>
+
+    <div id="sistemaContent" class="hidden">
+      <h2>Scanner de QR Codes (Sistema)</h2>
+      <!-- Inserimos aqui o scanner original que você forneceu, sem alterar IDs para manter integração -->
+      <video id="video" playsinline></video>
+      <div class="buttons">
+        <button id="startBtn">Iniciar Câmera</button>
+        <button id="stopBtn">Parar Câmera</button>
+        <button id="exportBtn">Exportar Excel</button>
+        <button id="clearBtn">Limpar Histórico</button>
+      </div>
+      <ul id="history"></ul>
+
+      <button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
+    </div>
+  </div>
+
+  <!-- LINKS & ARQUIVOS -->
+  <div id="linksArea" class="form-container hidden">
+    <h1>Links & Arquivos</h1>
+
+    <div class="card">
+      <h2>Adicionar link/arquivo</h2>
+      <label for="linkTitle">Título:</label>
+      <input id="linkTitle" placeholder="Titulo do link" />
+      <label for="linkUrl">URL ou caminho:</label>
+      <input id="linkUrl" placeholder="https://..." />
+      <div class="row">
+        <button id="addLink">Adicionar</button>
+        <button id="clearAllLinks" class="small">Limpar todos</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Lista pública de Links & Arquivos</h2>
+      <ul id="linksList" class="links-list"></ul>
+    </div>
+
+    <button class="voltar-btn" onclick="voltarMenu()">⬅ Voltar</button>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
